@@ -69,13 +69,13 @@ public sealed class TiltifyTokenProvider : IDisposable
     private async Task<(string Token, DateTimeOffset Expiry)> FetchTokenAsync(CancellationToken cancellationToken)
     {
         using var request = new HttpRequestMessage(HttpMethod.Post, _options.TokenEndpoint);
-        request.Content = new FormUrlEncodedContent(new[]
-        {
+        request.Content = new FormUrlEncodedContent(
+        [
             new KeyValuePair<string, string>("client_id", _options.ClientId),
             new KeyValuePair<string, string>("client_secret", _options.ClientSecret),
             new KeyValuePair<string, string>("grant_type", "client_credentials"),
             new KeyValuePair<string, string>("scope", _options.Scope),
-        });
+        ]);
 
         using var response = await _http.SendAsync(request, cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
