@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Tiltify.Client.DependencyInjection/Tiltify.Client.DependencyInjection.csproj" />
+    <Project Path="src/Tiltify.Client.Generated/Tiltify.Client.Generated.csproj" />
+    <Project Path="src/Tiltify.Client/Tiltify.Client.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Tiltify.Client.Tests/Tiltify.Client.Tests.csproj" />
+  </Folder>
+</Solution>

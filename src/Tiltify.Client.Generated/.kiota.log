@@ -1,0 +1,20 @@
+Warning: KiotaBuilder OpenAPI warning: #/ - A servers entry (v3) or host + basePath + schemes properties (v2) was not present in the OpenAPI description. The root URL will need to be set manually with the request adapter.
+Warning: KiotaBuilder OpenAPI warning: #/ - The schema Event is a polymorphic type but does not define a discriminator. This will result in serialization errors.
+Warning: KiotaBuilder OpenAPI warning: #/components/schemas/Slug - The format ~r/^[a-z|A-Z|-]+$/ is not supported by Kiota for the type String and the string type will be used.
+Error: KiotaBuilder OpenAPI error: #/paths/~1oauth~1authorize/get/responses - Responses must contain at least one response
+Warning: KiotaBuilder No server url found in the OpenAPI document. The base url will need to be set when using the client.
+Warning: KiotaBuilder Discriminator Unauthorized is not inherited from ErrorResponse.
+Warning: KiotaBuilder Discriminator Unauthorized is not inherited from ErrorResponse.
+Warning: KiotaBuilder Discriminator Unauthorized is not inherited from UnprocessableEntity.
+Warning: KiotaBuilder Discriminator NotFound is not inherited from UnprocessableEntity.
+Warning: KiotaBuilder Discriminator UnprocessableEntity is not inherited from ErrorResponse.
+Warning: KiotaBuilder Discriminator UnprocessableEntity is not inherited from ErrorResponse.
+Warning: KiotaBuilder Discriminator NotFound is not inherited from ErrorResponse.
+Warning: KiotaBuilder Discriminator NotFound is not inherited from ErrorResponse.
+Warning: KiotaBuilder Discriminator Unauthorized is not inherited from NotFound.
+Warning: KiotaBuilder Discriminator ErrorResponse is not inherited from UnprocessableEntity.
+Warning: KiotaBuilder Discriminator UnprocessableEntity is not inherited from Unauthorized.
+Warning: KiotaBuilder Discriminator UnprocessableEntity is not inherited from NotFound.
+Warning: KiotaBuilder Discriminator ErrorResponse is not inherited from NotFound.
+Warning: KiotaBuilder Discriminator NotFound is not inherited from Unauthorized.
+Warning: KiotaBuilder Discriminator ErrorResponse is not inherited from Unauthorized.

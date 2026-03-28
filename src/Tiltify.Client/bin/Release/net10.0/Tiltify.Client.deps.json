@@ -1,0 +1,456 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "Tiltify.Client/0.0.0-alpha.0": {
+        "dependencies": {
+          "Agash.Webhook.Abstractions": "1.0.0",
+          "Microsoft.Extensions.Http": "10.0.0",
+          "Microsoft.Extensions.Options": "10.0.0",
+          "Microsoft.Kiota.Abstractions": "1.22.1",
+          "Microsoft.Kiota.Http.HttpClientLibrary": "1.22.1",
+          "Microsoft.Kiota.Serialization.Json": "1.22.1",
+          "Tiltify.Client.Generated": "1.0.0"
+        },
+        "runtime": {
+          "Tiltify.Client.dll": {}
+        }
+      },
+      "Agash.Webhook.Abstractions/1.0.0": {
+        "runtime": {
+          "lib/net10.0/Agash.Webhook.Abstractions.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Microsoft.Extensions.Configuration/10.0.0": {
+        "dependencies": {
+          "Microsoft.Extensions.Configuration.Abstractions": "10.0.0",
+          "Microsoft.Extensions.Primitives": "10.0.0"
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.Extensions.Configuration.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.52411"
+          }
+        }
+      },
+      "Microsoft.Extensions.Configuration.Abstractions/10.0.0": {
+        "dependencies": {
+          "Microsoft.Extensions.Primitives": "10.0.0"
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.Extensions.Configuration.Abstractions.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.52411"
+          }
+        }
+      },
+      "Microsoft.Extensions.Configuration.Binder/10.0.0": {
+        "dependencies": {
+          "Microsoft.Extensions.Configuration": "10.0.0",
+          "Microsoft.Extensions.Configuration.Abstractions": "10.0.0"
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.Extensions.Configuration.Binder.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.52411"
+          }
+        }
+      },
+      "Microsoft.Extensions.DependencyInjection/10.0.0": {
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.0"
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.Extensions.DependencyInjection.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.52411"
+          }
+        }
+      },
+      "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.0": {
+        "runtime": {
+          "lib/net10.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.52411"
+          }
+        }
+      },
+      "Microsoft.Extensions.Diagnostics/10.0.0": {
+        "dependencies": {
+          "Microsoft.Extensions.Configuration": "10.0.0",
+          "Microsoft.Extensions.Diagnostics.Abstractions": "10.0.0",
+          "Microsoft.Extensions.Options.ConfigurationExtensions": "10.0.0"
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.Extensions.Diagnostics.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.52411"
+          }
+        }
+      },
+      "Microsoft.Extensions.Diagnostics.Abstractions/10.0.0": {
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.0",
+          "Microsoft.Extensions.Options": "10.0.0"
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.Extensions.Diagnostics.Abstractions.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.52411"
+          }
+        }
+      },
+      "Microsoft.Extensions.Http/10.0.0": {
+        "dependencies": {
+          "Microsoft.Extensions.Configuration.Abstractions": "10.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.0",
+          "Microsoft.Extensions.Diagnostics": "10.0.0",
+          "Microsoft.Extensions.Logging": "10.0.0",
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.0",
+          "Microsoft.Extensions.Options": "10.0.0"
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.Extensions.Http.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.52411"
+          }
+        }
+      },
+      "Microsoft.Extensions.Logging/10.0.0": {
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection": "10.0.0",
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.0",
+          "Microsoft.Extensions.Options": "10.0.0"
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.Extensions.Logging.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.52411"
+          }
+        }
+      },
+      "Microsoft.Extensions.Logging.Abstractions/10.0.0": {
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.0"
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.Extensions.Logging.Abstractions.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.52411"
+          }
+        }
+      },
+      "Microsoft.Extensions.Options/10.0.0": {
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.0",
+          "Microsoft.Extensions.Primitives": "10.0.0"
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.Extensions.Options.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.52411"
+          }
+        }
+      },
+      "Microsoft.Extensions.Options.ConfigurationExtensions/10.0.0": {
+        "dependencies": {
+          "Microsoft.Extensions.Configuration.Abstractions": "10.0.0",
+          "Microsoft.Extensions.Configuration.Binder": "10.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.0",
+          "Microsoft.Extensions.Options": "10.0.0",
+          "Microsoft.Extensions.Primitives": "10.0.0"
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.Extensions.Options.ConfigurationExtensions.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.52411"
+          }
+        }
+      },
+      "Microsoft.Extensions.Primitives/10.0.0": {
+        "runtime": {
+          "lib/net10.0/Microsoft.Extensions.Primitives.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.52411"
+          }
+        }
+      },
+      "Microsoft.IO.RecyclableMemoryStream/3.0.1": {
+        "runtime": {
+          "lib/net6.0/Microsoft.IO.RecyclableMemoryStream.dll": {
+            "assemblyVersion": "3.0.1.0",
+            "fileVersion": "3.0.1.0"
+          }
+        }
+      },
+      "Microsoft.Kiota.Abstractions/1.22.1": {
+        "dependencies": {
+          "Std.UriTemplate": "2.0.8"
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Kiota.Abstractions.dll": {
+            "assemblyVersion": "1.22.1.0",
+            "fileVersion": "1.22.1.0"
+          }
+        }
+      },
+      "Microsoft.Kiota.Http.HttpClientLibrary/1.22.1": {
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.0",
+          "Microsoft.Kiota.Abstractions": "1.22.1"
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Kiota.Http.HttpClientLibrary.dll": {
+            "assemblyVersion": "1.22.1.0",
+            "fileVersion": "1.22.1.0"
+          }
+        }
+      },
+      "Microsoft.Kiota.Serialization.Form/1.22.1": {
+        "dependencies": {
+          "Microsoft.IO.RecyclableMemoryStream": "3.0.1",
+          "Microsoft.Kiota.Abstractions": "1.22.1"
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Kiota.Serialization.Form.dll": {
+            "assemblyVersion": "1.22.1.0",
+            "fileVersion": "1.22.1.0"
+          }
+        }
+      },
+      "Microsoft.Kiota.Serialization.Json/1.22.1": {
+        "dependencies": {
+          "Microsoft.IO.RecyclableMemoryStream": "3.0.1",
+          "Microsoft.Kiota.Abstractions": "1.22.1"
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Kiota.Serialization.Json.dll": {
+            "assemblyVersion": "1.22.1.0",
+            "fileVersion": "1.22.1.0"
+          }
+        }
+      },
+      "Microsoft.Kiota.Serialization.Multipart/1.22.1": {
+        "dependencies": {
+          "Microsoft.IO.RecyclableMemoryStream": "3.0.1",
+          "Microsoft.Kiota.Abstractions": "1.22.1"
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Kiota.Serialization.Multipart.dll": {
+            "assemblyVersion": "1.22.1.0",
+            "fileVersion": "1.22.1.0"
+          }
+        }
+      },
+      "Microsoft.Kiota.Serialization.Text/1.22.1": {
+        "dependencies": {
+          "Microsoft.IO.RecyclableMemoryStream": "3.0.1",
+          "Microsoft.Kiota.Abstractions": "1.22.1"
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Kiota.Serialization.Text.dll": {
+            "assemblyVersion": "1.22.1.0",
+            "fileVersion": "1.22.1.0"
+          }
+        }
+      },
+      "Std.UriTemplate/2.0.8": {
+        "runtime": {
+          "lib/net5.0/Std.UriTemplate.dll": {
+            "assemblyVersion": "2.0.8.0",
+            "fileVersion": "2.0.8.0"
+          }
+        }
+      },
+      "Tiltify.Client.Generated/1.0.0": {
+        "dependencies": {
+          "Microsoft.Kiota.Abstractions": "1.22.1",
+          "Microsoft.Kiota.Http.HttpClientLibrary": "1.22.1",
+          "Microsoft.Kiota.Serialization.Form": "1.22.1",
+          "Microsoft.Kiota.Serialization.Json": "1.22.1",
+          "Microsoft.Kiota.Serialization.Multipart": "1.22.1",
+          "Microsoft.Kiota.Serialization.Text": "1.22.1"
+        },
+        "runtime": {
+          "Tiltify.Client.Generated.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Tiltify.Client/0.0.0-alpha.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Agash.Webhook.Abstractions/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-uo2LZF5iW4pv+3Z19mcmUhmE6pxwonDqcmbhfyv5wfondPUTwX2AjMcfFLbw+uY1PlwlvVZgF3XCLAqkevQelQ==",
+      "path": "agash.webhook.abstractions/1.0.0",
+      "hashPath": "agash.webhook.abstractions.1.0.0.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Configuration/10.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-H4SWETCh/cC5L1WtWchHR6LntGk3rDTTznZMssr4cL8IbDmMWBxY+MOGDc/ASnqNolLKPIWHWeuC1ddiL/iNPw==",
+      "path": "microsoft.extensions.configuration/10.0.0",
+      "hashPath": "microsoft.extensions.configuration.10.0.0.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Configuration.Abstractions/10.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-d2kDKnCsJvY7mBVhcjPSp9BkJk48DsaHPg5u+Oy4f8XaOqnEedRy/USyvnpHL92wpJ6DrTPy7htppUUzskbCXQ==",
+      "path": "microsoft.extensions.configuration.abstractions/10.0.0",
+      "hashPath": "microsoft.extensions.configuration.abstractions.10.0.0.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Configuration.Binder/10.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-tMF9wNh+hlyYDWB8mrFCQHQmWHlRosol1b/N2Jrefy1bFLnuTlgSYmPyHNmz8xVQgs7DpXytBRWxGhG+mSTp0g==",
+      "path": "microsoft.extensions.configuration.binder/10.0.0",
+      "hashPath": "microsoft.extensions.configuration.binder.10.0.0.nupkg.sha512"
+    },
+    "Microsoft.Extensions.DependencyInjection/10.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-f0RBabswJq+gRu5a+hWIobrLWiUYPKMhCD9WO3sYBAdSy3FFH14LMvLVFZc2kPSCimBLxSuitUhsd6tb0TAY6A==",
+      "path": "microsoft.extensions.dependencyinjection/10.0.0",
+      "hashPath": "microsoft.extensions.dependencyinjection.10.0.0.nupkg.sha512"
+    },
+    "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-L3AdmZ1WOK4XXT5YFPEwyt0ep6l8lGIPs7F5OOBZc77Zqeo01Of7XXICy47628sdVl0v/owxYJTe86DTgFwKCA==",
+      "path": "microsoft.extensions.dependencyinjection.abstractions/10.0.0",
+      "hashPath": "microsoft.extensions.dependencyinjection.abstractions.10.0.0.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Diagnostics/10.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-xjkxIPgrT0mKTfBwb+CVqZnRchyZgzKIfDQOp8z+WUC6vPe3WokIf71z+hJPkH0YBUYJwa7Z/al1R087ib9oiw==",
+      "path": "microsoft.extensions.diagnostics/10.0.0",
+      "hashPath": "microsoft.extensions.diagnostics.10.0.0.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Diagnostics.Abstractions/10.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-SfK89ytD61S7DgzorFljSkUeluC1ncn6dtZgwc0ot39f/BEYWBl5jpgvodxduoYAs1d9HG8faCDRZxE95UMo2A==",
+      "path": "microsoft.extensions.diagnostics.abstractions/10.0.0",
+      "hashPath": "microsoft.extensions.diagnostics.abstractions.10.0.0.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Http/10.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-r+mSvm/Ryc/iYcc9zcUG5VP9EBB8PL1rgVU6macEaYk45vmGRk9PntM3aynFKN6s3Q4WW36kedTycIctctpTUQ==",
+      "path": "microsoft.extensions.http/10.0.0",
+      "hashPath": "microsoft.extensions.http.10.0.0.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Logging/10.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-BStFkd5CcnEtarlcgYDBcFzGYCuuNMzPs02wN3WBsOFoYIEmYoUdAiU+au6opzoqfTYJsMTW00AeqDdnXH2CvA==",
+      "path": "microsoft.extensions.logging/10.0.0",
+      "hashPath": "microsoft.extensions.logging.10.0.0.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Logging.Abstractions/10.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-FU/IfjDfwaMuKr414SSQNTIti/69bHEMb+QKrskRb26oVqpx3lNFXMjs/RC9ZUuhBhcwDM2BwOgoMw+PZ+beqQ==",
+      "path": "microsoft.extensions.logging.abstractions/10.0.0",
+      "hashPath": "microsoft.extensions.logging.abstractions.10.0.0.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Options/10.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-8oCAgXOow5XDrY9HaXX1QmH3ORsyZO/ANVHBlhLyCeWTH5Sg4UuqZeOTWJi6484M+LqSx0RqQXDJtdYy2BNiLQ==",
+      "path": "microsoft.extensions.options/10.0.0",
+      "hashPath": "microsoft.extensions.options.10.0.0.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Options.ConfigurationExtensions/10.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-tL9cSl3maS5FPzp/3MtlZI21ExWhni0nnUCF8HY4npTsINw45n9SNDbkKXBMtFyUFGSsQep25fHIDN4f/Vp3AQ==",
+      "path": "microsoft.extensions.options.configurationextensions/10.0.0",
+      "hashPath": "microsoft.extensions.options.configurationextensions.10.0.0.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Primitives/10.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-inRnbpCS0nwO/RuoZIAqxQUuyjaknOOnCEZB55KSMMjRhl0RQDttSmLSGsUJN3RQ3ocf5NDLFd2mOQViHqMK5w==",
+      "path": "microsoft.extensions.primitives/10.0.0",
+      "hashPath": "microsoft.extensions.primitives.10.0.0.nupkg.sha512"
+    },
+    "Microsoft.IO.RecyclableMemoryStream/3.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-s/s20YTVY9r9TPfTrN5g8zPF1YhwxyqO6PxUkrYTGI2B+OGPe9AdajWZrLhFqXIvqIW23fnUE4+ztrUWNU1+9g==",
+      "path": "microsoft.io.recyclablememorystream/3.0.1",
+      "hashPath": "microsoft.io.recyclablememorystream.3.0.1.nupkg.sha512"
+    },
+    "Microsoft.Kiota.Abstractions/1.22.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-oalsaAAFmMnC3OdpKvBPC9lizUZIRqd2gWk6PuCVP2aHPOlHTVS/U7E9htlVtp0RJ9ir0qkcSjtUt1sl5B4u7A==",
+      "path": "microsoft.kiota.abstractions/1.22.1",
+      "hashPath": "microsoft.kiota.abstractions.1.22.1.nupkg.sha512"
+    },
+    "Microsoft.Kiota.Http.HttpClientLibrary/1.22.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-tRqS/CyzzsbJCLItJPwAfOi3YjMLnu1wzyKHDWDbS34+1Xv2mJsxVsZTRvwjblZZcgy1wRQ/LL6AcozSaDkBTQ==",
+      "path": "microsoft.kiota.http.httpclientlibrary/1.22.1",
+      "hashPath": "microsoft.kiota.http.httpclientlibrary.1.22.1.nupkg.sha512"
+    },
+    "Microsoft.Kiota.Serialization.Form/1.22.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-316VXS9ezoruCJzeW4IWQjJfN2okHmsThSXr+NrANBGbpOfYE+l8P+lDtVRNQgHtMNHNEd2WYeMFQMc0G7hKeg==",
+      "path": "microsoft.kiota.serialization.form/1.22.1",
+      "hashPath": "microsoft.kiota.serialization.form.1.22.1.nupkg.sha512"
+    },
+    "Microsoft.Kiota.Serialization.Json/1.22.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-YHiGIrZ2quJSK72FYusmAt+4fOBO+l9vnZtrnH2RvlG8+gJ2U0gO0mX79rCPicwQFdvwXzYCf6YqWrWuMSsC+Q==",
+      "path": "microsoft.kiota.serialization.json/1.22.1",
+      "hashPath": "microsoft.kiota.serialization.json.1.22.1.nupkg.sha512"
+    },
+    "Microsoft.Kiota.Serialization.Multipart/1.22.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-4DAAmAb5kn1LuGD6Id6OcYNKpjCOSdDrtRKSKlr/t6b6RYubkhJSwsXH/0LvEG5fk34JN62yq0z+KMDMUqfxHg==",
+      "path": "microsoft.kiota.serialization.multipart/1.22.1",
+      "hashPath": "microsoft.kiota.serialization.multipart.1.22.1.nupkg.sha512"
+    },
+    "Microsoft.Kiota.Serialization.Text/1.22.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-29VFjaIXyWDHPWVPadckxnNpoj7Owu9nVtXPi6PLg2qZt2Iepw/4yL0JBf9AkDQQtzon6fy5AnGxOUnHhy4MtA==",
+      "path": "microsoft.kiota.serialization.text/1.22.1",
+      "hashPath": "microsoft.kiota.serialization.text.1.22.1.nupkg.sha512"
+    },
+    "Std.UriTemplate/2.0.8": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-IAR4gJlLVD4r/FsU/rDb1+9sbB3/tCFVZz5IzlbM2yHoiUisBi5Ek/KXRUF7RcqNARka79EoaOz9INnXvQ/O6w==",
+      "path": "std.uritemplate/2.0.8",
+      "hashPath": "std.uritemplate.2.0.8.nupkg.sha512"
+    },
+    "Tiltify.Client.Generated/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

@@ -1,0 +1,414 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Tiltify.Client</name>
+    </assembly>
+    <members>
+        <member name="T:Tiltify.Client.Abstractions.ITiltifyClientFactory">
+            <summary>
+            Creates authenticated <see cref="T:Tiltify.Client.Generated.TiltifyApiClient"/> instances.
+            </summary>
+        </member>
+        <member name="M:Tiltify.Client.Abstractions.ITiltifyClientFactory.CreateApiClient">
+            <summary>
+            Creates a new <see cref="T:Tiltify.Client.Generated.TiltifyApiClient"/> using the configured OAuth credentials.
+            </summary>
+        </member>
+        <member name="T:Tiltify.Client.Abstractions.ITiltifyWebhookHandler">
+            <summary>
+            Transport-neutral handler for inbound Tiltify v5 webhook requests.
+            </summary>
+        </member>
+        <member name="M:Tiltify.Client.Abstractions.ITiltifyWebhookHandler.HandleAsync(Agash.Webhook.Abstractions.WebhookRequest,Tiltify.Client.Options.TiltifyWebhookOptions,System.Threading.CancellationToken)">
+            <summary>
+            Processes a Tiltify webhook request and returns a normalized result.
+            </summary>
+            <param name="request">The inbound webhook request.</param>
+            <param name="options">The webhook options containing the signing secret.</param>
+            <param name="cancellationToken">A cancellation token.</param>
+            <returns>A <see cref="T:Agash.Webhook.Abstractions.WebhookHandleResult`1"/> containing the outcome and normalized event.</returns>
+        </member>
+        <member name="T:Tiltify.Client.Authentication.TiltifyAuthenticationProvider">
+            <summary>
+            Provides Kiota authentication for the Tiltify API using OAuth bearer tokens and the Client-Id header.
+            </summary>
+        </member>
+        <member name="M:Tiltify.Client.Authentication.TiltifyAuthenticationProvider.#ctor(Tiltify.Client.Authentication.TiltifyTokenProvider,Tiltify.Client.Options.TiltifyClientOptions)">
+            <summary>
+            Initializes a new instance of <see cref="T:Tiltify.Client.Authentication.TiltifyAuthenticationProvider"/>.
+            </summary>
+            <param name="tokenProvider">The token provider that supplies valid OAuth access tokens.</param>
+            <param name="options">The client options supplying the client ID header value.</param>
+        </member>
+        <member name="M:Tiltify.Client.Authentication.TiltifyAuthenticationProvider.AuthenticateRequestAsync(Microsoft.Kiota.Abstractions.RequestInformation,System.Collections.Generic.Dictionary{System.String,System.Object},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:Tiltify.Client.Authentication.TiltifyTokenProvider">
+            <summary>
+            Manages OAuth access tokens for the Tiltify API using the client credentials grant.
+            Tokens are cached and proactively refreshed before expiry.
+            </summary>
+        </member>
+        <member name="M:Tiltify.Client.Authentication.TiltifyTokenProvider.#ctor(Microsoft.Extensions.Options.IOptions{Tiltify.Client.Options.TiltifyClientOptions},System.Net.Http.HttpClient)">
+            <summary>
+            Initializes a new instance of <see cref="T:Tiltify.Client.Authentication.TiltifyTokenProvider"/> using a shared <see cref="T:System.Net.Http.HttpClient"/>.
+            </summary>
+        </member>
+        <member name="M:Tiltify.Client.Authentication.TiltifyTokenProvider.#ctor(Tiltify.Client.Options.TiltifyClientOptions)">
+            <summary>
+            Initializes a new instance of <see cref="T:Tiltify.Client.Authentication.TiltifyTokenProvider"/> that owns its own <see cref="T:System.Net.Http.HttpClient"/>.
+            </summary>
+        </member>
+        <member name="M:Tiltify.Client.Authentication.TiltifyTokenProvider.GetTokenAsync(System.Threading.CancellationToken)">
+            <summary>
+            Returns a valid access token, fetching or refreshing as necessary.
+            </summary>
+        </member>
+        <member name="M:Tiltify.Client.Authentication.TiltifyTokenProvider.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:Tiltify.Client.Events.TiltifyDonationWebhookEvent">
+            <summary>
+            Raised when a donation is created or updated on a campaign.
+            Covers both <c>public:direct:donation_updated</c> and <c>public:indirect:donation_updated</c> events.
+            </summary>
+        </member>
+        <member name="P:Tiltify.Client.Events.TiltifyDonationWebhookEvent.Data">
+            <summary>Gets the donation data payload.</summary>
+        </member>
+        <member name="P:Tiltify.Client.Events.TiltifyDonationWebhookEvent.IsDirect">
+            <summary>
+            Gets a value indicating whether this is a direct campaign donation (<see langword="true"/>)
+            or an indirect/sub-campaign donation (<see langword="false"/>).
+            </summary>
+        </member>
+        <member name="T:Tiltify.Client.Events.TiltifyFactWebhookEvent">
+            <summary>
+            Raised when a fact (milestone/target) is updated on a campaign.
+            Covers both <c>public:direct:fact_updated</c> and <c>public:indirect:fact_updated</c> events.
+            </summary>
+        </member>
+        <member name="P:Tiltify.Client.Events.TiltifyFactWebhookEvent.Data">
+            <summary>Gets the fact/milestone data payload.</summary>
+        </member>
+        <member name="P:Tiltify.Client.Events.TiltifyFactWebhookEvent.IsDirect">
+            <summary>
+            Gets a value indicating whether this is a direct campaign fact (<see langword="true"/>)
+            or an indirect/sub-campaign fact (<see langword="false"/>).
+            </summary>
+        </member>
+        <member name="T:Tiltify.Client.Events.TiltifyUnknownWebhookEvent">
+            <summary>
+            Represents a Tiltify webhook event with an unrecognized or unmapped event type.
+            The raw data payload is preserved for caller-side handling.
+            </summary>
+        </member>
+        <member name="P:Tiltify.Client.Events.TiltifyUnknownWebhookEvent.RawData">
+            <summary>Gets the raw JSON data element from the webhook payload.</summary>
+        </member>
+        <member name="T:Tiltify.Client.Events.TiltifyWebhookEvent">
+            <summary>
+            Base type for all normalized Tiltify webhook events.
+            </summary>
+        </member>
+        <member name="P:Tiltify.Client.Events.TiltifyWebhookEvent.DeliveryId">
+            <summary>Gets the unique delivery identifier from the webhook meta envelope.</summary>
+        </member>
+        <member name="P:Tiltify.Client.Events.TiltifyWebhookEvent.EventName">
+            <summary>Gets the event name (e.g. <c>public:direct:donation_updated</c>).</summary>
+        </member>
+        <member name="P:Tiltify.Client.Events.TiltifyWebhookEvent.GeneratedAt">
+            <summary>Gets the ISO 8601 timestamp when the event was generated by Tiltify.</summary>
+        </member>
+        <member name="P:Tiltify.Client.Events.TiltifyWebhookEvent.Meta">
+            <summary>Gets the full metadata envelope.</summary>
+        </member>
+        <member name="T:Tiltify.Client.Events.TiltifyWebhookEventNames">
+            <summary>
+            Contains constants for known Tiltify v5 webhook event names.
+            </summary>
+        </member>
+        <member name="F:Tiltify.Client.Events.TiltifyWebhookEventNames.DirectDonationUpdated">
+            <summary>Donation updated on a campaign you are directly subscribed to.</summary>
+        </member>
+        <member name="F:Tiltify.Client.Events.TiltifyWebhookEventNames.IndirectDonationUpdated">
+            <summary>Donation updated on a sub-campaign or team campaign you follow indirectly.</summary>
+        </member>
+        <member name="F:Tiltify.Client.Events.TiltifyWebhookEventNames.DirectFactUpdated">
+            <summary>Fact (milestone/target) updated on a campaign you are directly subscribed to.</summary>
+        </member>
+        <member name="F:Tiltify.Client.Events.TiltifyWebhookEventNames.IndirectFactUpdated">
+            <summary>Fact (milestone/target) updated on a sub-campaign or team campaign you follow indirectly.</summary>
+        </member>
+        <member name="T:Tiltify.Client.Internal.ConstantTimeStringComparer">
+            <summary>
+            Provides constant-time string comparison to prevent timing attacks when comparing secrets.
+            </summary>
+        </member>
+        <member name="M:Tiltify.Client.Internal.ConstantTimeStringComparer.Equals(System.String,System.String)">
+            <summary>
+            Compares two strings in constant time to prevent timing-based attacks.
+            </summary>
+            <param name="a">The first string.</param>
+            <param name="b">The second string.</param>
+            <returns><see langword="true"/> when both strings are equal; otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="T:Tiltify.Client.Internal.TiltifyTokenResponse">
+            <summary>
+            Represents the OAuth token response from the Tiltify token endpoint.
+            </summary>
+        </member>
+        <member name="P:Tiltify.Client.Internal.TiltifyTokenResponse.AccessToken">
+            <summary>Gets the access token.</summary>
+        </member>
+        <member name="P:Tiltify.Client.Internal.TiltifyTokenResponse.TokenType">
+            <summary>Gets the token type (typically "Bearer").</summary>
+        </member>
+        <member name="P:Tiltify.Client.Internal.TiltifyTokenResponse.ExpiresIn">
+            <summary>Gets the number of seconds until the access token expires.</summary>
+        </member>
+        <member name="P:Tiltify.Client.Internal.TiltifyTokenResponse.RefreshToken">
+            <summary>Gets the optional refresh token.</summary>
+        </member>
+        <member name="P:Tiltify.Client.Internal.TiltifyTokenResponse.Scope">
+            <summary>Gets the granted scopes.</summary>
+        </member>
+        <member name="P:Tiltify.Client.Internal.TiltifyTokenResponse.CreatedAt">
+            <summary>Gets the creation timestamp.</summary>
+        </member>
+        <member name="T:Tiltify.Client.Internal.TiltifyWebhookEnvelope">
+            <summary>
+            Represents the raw Tiltify v5 webhook payload envelope before type-specific deserialization.
+            </summary>
+        </member>
+        <member name="P:Tiltify.Client.Internal.TiltifyWebhookEnvelope.Meta">
+            <summary>Gets the webhook metadata.</summary>
+        </member>
+        <member name="P:Tiltify.Client.Internal.TiltifyWebhookEnvelope.Data">
+            <summary>Gets the raw data element for type-specific deserialization.</summary>
+        </member>
+        <member name="T:Tiltify.Client.Models.TiltifyAmount">
+            <summary>
+            Represents a monetary amount with currency information.
+            </summary>
+        </member>
+        <member name="P:Tiltify.Client.Models.TiltifyAmount.Value">
+            <summary>Gets the numeric value as a decimal string (e.g. "50.00").</summary>
+        </member>
+        <member name="P:Tiltify.Client.Models.TiltifyAmount.Currency">
+            <summary>Gets the ISO 4217 currency code (e.g. "USD").</summary>
+        </member>
+        <member name="T:Tiltify.Client.Models.TiltifyDonation">
+            <summary>
+            Represents a Tiltify donation record delivered via webhook.
+            </summary>
+        </member>
+        <member name="P:Tiltify.Client.Models.TiltifyDonation.Id">
+            <summary>Gets the donation ID.</summary>
+        </member>
+        <member name="P:Tiltify.Client.Models.TiltifyDonation.DonorName">
+            <summary>Gets the donor-visible name.</summary>
+        </member>
+        <member name="P:Tiltify.Client.Models.TiltifyDonation.DonorComment">
+            <summary>Gets the public donor comment.</summary>
+        </member>
+        <member name="P:Tiltify.Client.Models.TiltifyDonation.Amount">
+            <summary>Gets the donation amount.</summary>
+        </member>
+        <member name="P:Tiltify.Client.Models.TiltifyDonation.RewardId">
+            <summary>Gets the fundraiser reward selected by the donor, if any.</summary>
+        </member>
+        <member name="P:Tiltify.Client.Models.TiltifyDonation.CampaignId">
+            <summary>Gets the name of the fundraising campaign associated with this donation.</summary>
+        </member>
+        <member name="P:Tiltify.Client.Models.TiltifyDonation.CauseId">
+            <summary>Gets the cause ID associated with this donation.</summary>
+        </member>
+        <member name="P:Tiltify.Client.Models.TiltifyDonation.FundraisingEventId">
+            <summary>Gets the fundraising team event ID, if applicable.</summary>
+        </member>
+        <member name="P:Tiltify.Client.Models.TiltifyDonation.CompletedAt">
+            <summary>Gets the timestamp when the donation was completed.</summary>
+        </member>
+        <member name="P:Tiltify.Client.Models.TiltifyDonation.CreatedAt">
+            <summary>Gets the timestamp when the donation was created.</summary>
+        </member>
+        <member name="P:Tiltify.Client.Models.TiltifyDonation.DonorAnonymous">
+            <summary>Gets whether the donation was made anonymously.</summary>
+        </member>
+        <member name="P:Tiltify.Client.Models.TiltifyDonation.Test">
+            <summary>Gets whether the donation is test data.</summary>
+        </member>
+        <member name="T:Tiltify.Client.Models.TiltifyFact">
+            <summary>
+            Represents a Tiltify "fact" — a milestone or target in a campaign delivered via webhook.
+            </summary>
+        </member>
+        <member name="P:Tiltify.Client.Models.TiltifyFact.Id">
+            <summary>Gets the fact ID.</summary>
+        </member>
+        <member name="P:Tiltify.Client.Models.TiltifyFact.Name">
+            <summary>Gets the fact name/title.</summary>
+        </member>
+        <member name="P:Tiltify.Client.Models.TiltifyFact.Description">
+            <summary>Gets the fact description.</summary>
+        </member>
+        <member name="P:Tiltify.Client.Models.TiltifyFact.Value">
+            <summary>Gets the current/actual value of the fact (e.g. total raised).</summary>
+        </member>
+        <member name="P:Tiltify.Client.Models.TiltifyFact.CampaignId">
+            <summary>Gets the campaign ID this fact belongs to.</summary>
+        </member>
+        <member name="P:Tiltify.Client.Models.TiltifyFact.Active">
+            <summary>Gets whether the milestone has been reached.</summary>
+        </member>
+        <member name="P:Tiltify.Client.Models.TiltifyFact.UpdatedAt">
+            <summary>Gets the timestamp when the fact was last updated.</summary>
+        </member>
+        <member name="T:Tiltify.Client.Models.TiltifyWebhookMeta">
+            <summary>
+            Represents the metadata envelope present on every Tiltify v5 webhook delivery.
+            </summary>
+        </member>
+        <member name="P:Tiltify.Client.Models.TiltifyWebhookMeta.Id">
+            <summary>Gets the unique delivery identifier.</summary>
+        </member>
+        <member name="P:Tiltify.Client.Models.TiltifyWebhookMeta.EventName">
+            <summary>Gets the event name (e.g. <c>public:direct:donation_updated</c>).</summary>
+        </member>
+        <member name="P:Tiltify.Client.Models.TiltifyWebhookMeta.GeneratedAt">
+            <summary>Gets the ISO 8601 timestamp when the event was generated.</summary>
+        </member>
+        <member name="P:Tiltify.Client.Models.TiltifyWebhookMeta.SubscriptionSourceId">
+            <summary>
+            Gets the campaign or cause ID that is the source of the subscription that triggered this event.
+            </summary>
+        </member>
+        <member name="P:Tiltify.Client.Models.TiltifyWebhookMeta.SubscriptionTargetId">
+            <summary>
+            Gets the webhook endpoint ID that received this delivery.
+            </summary>
+        </member>
+        <member name="P:Tiltify.Client.Models.TiltifyWebhookMeta.AttemptNumber">
+            <summary>Gets the attempt number for this delivery (1-based).</summary>
+        </member>
+        <member name="T:Tiltify.Client.Options.TiltifyClientOptions">
+            <summary>
+            Configuration options for the Tiltify API client.
+            </summary>
+        </member>
+        <member name="P:Tiltify.Client.Options.TiltifyClientOptions.ClientId">
+            <summary>
+            Gets or sets the Tiltify application client ID.
+            </summary>
+        </member>
+        <member name="P:Tiltify.Client.Options.TiltifyClientOptions.ClientSecret">
+            <summary>
+            Gets or sets the Tiltify application client secret.
+            </summary>
+        </member>
+        <member name="P:Tiltify.Client.Options.TiltifyClientOptions.BaseUrl">
+            <summary>
+            Gets or sets the Tiltify API base URL.
+            </summary>
+            <value>Defaults to <c>https://v5api.tiltify.com</c>.</value>
+        </member>
+        <member name="P:Tiltify.Client.Options.TiltifyClientOptions.TokenEndpoint">
+            <summary>
+            Gets or sets the token endpoint URL.
+            </summary>
+            <value>Defaults to <c>https://v5api.tiltify.com/oauth/token</c>.</value>
+        </member>
+        <member name="P:Tiltify.Client.Options.TiltifyClientOptions.Scope">
+            <summary>
+            Gets or sets the OAuth scopes to request.
+            </summary>
+            <value>Defaults to <c>public</c>.</value>
+        </member>
+        <member name="P:Tiltify.Client.Options.TiltifyClientOptions.TokenRefreshBufferSeconds">
+            <summary>
+            Gets or sets the number of seconds before token expiry at which to proactively refresh.
+            </summary>
+            <value>Defaults to <c>60</c> seconds.</value>
+        </member>
+        <member name="T:Tiltify.Client.Options.TiltifyWebhookOptions">
+            <summary>
+            Configuration options for Tiltify webhook handling.
+            </summary>
+        </member>
+        <member name="P:Tiltify.Client.Options.TiltifyWebhookOptions.SigningSecret">
+            <summary>
+            Gets or sets the webhook signing secret configured in the Tiltify dashboard.
+            </summary>
+            <remarks>
+            Used to verify the <c>X-Tiltify-Signature</c> header on inbound webhook deliveries.
+            The signed string is <c>{X-Tiltify-Timestamp}.{rawBody}</c>, HMAC-SHA256, Base64-encoded.
+            </remarks>
+        </member>
+        <member name="T:Tiltify.Client.TiltifyClientFactory">
+            <summary>
+            Default implementation of <see cref="T:Tiltify.Client.Abstractions.ITiltifyClientFactory"/>.
+            Creates <see cref="T:Tiltify.Client.Generated.TiltifyApiClient"/> instances backed by an auto-refreshing token provider.
+            </summary>
+        </member>
+        <member name="M:Tiltify.Client.TiltifyClientFactory.#ctor(Tiltify.Client.Authentication.TiltifyTokenProvider,Tiltify.Client.Options.TiltifyClientOptions)">
+            <summary>
+            Initializes a new instance of <see cref="T:Tiltify.Client.TiltifyClientFactory"/>.
+            </summary>
+        </member>
+        <member name="M:Tiltify.Client.TiltifyClientFactory.CreateApiClient">
+            <inheritdoc />
+        </member>
+        <member name="M:Tiltify.Client.TiltifyClientFactory.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:Tiltify.Client.Webhooks.TiltifyWebhookHandler">
+            <summary>
+            Default transport-neutral implementation of <see cref="T:Tiltify.Client.Abstractions.ITiltifyWebhookHandler"/>.
+            Verifies the Tiltify webhook signature and deserializes the payload into a typed event.
+            </summary>
+        </member>
+        <member name="M:Tiltify.Client.Webhooks.TiltifyWebhookHandler.#ctor(Tiltify.Client.Webhooks.TiltifyWebhookSignatureVerifier)">
+            <summary>
+            Initializes a new instance of <see cref="T:Tiltify.Client.Webhooks.TiltifyWebhookHandler"/>.
+            </summary>
+        </member>
+        <member name="M:Tiltify.Client.Webhooks.TiltifyWebhookHandler.HandleAsync(Agash.Webhook.Abstractions.WebhookRequest,Tiltify.Client.Options.TiltifyWebhookOptions,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:Tiltify.Client.Webhooks.TiltifyWebhookSignatureVerifier">
+            <summary>
+            Verifies Tiltify v5 webhook signatures.
+            </summary>
+            <remarks>
+            Tiltify signs webhook deliveries using HMAC-SHA256. The signed string is
+            <c>{X-Tiltify-Timestamp}.{rawBody}</c> and the digest is Base64-encoded.
+            The signature is transmitted in the <c>X-Tiltify-Signature</c> header.
+            </remarks>
+        </member>
+        <member name="F:Tiltify.Client.Webhooks.TiltifyWebhookSignatureVerifier.TimestampHeaderName">
+            <summary>The header containing the delivery timestamp.</summary>
+        </member>
+        <member name="F:Tiltify.Client.Webhooks.TiltifyWebhookSignatureVerifier.SignatureHeaderName">
+            <summary>The header containing the Base64-encoded HMAC-SHA256 signature.</summary>
+        </member>
+        <member name="F:Tiltify.Client.Webhooks.TiltifyWebhookSignatureVerifier.VersionHeaderName">
+            <summary>The header containing the webhook API version (e.g. <c>v5</c>).</summary>
+        </member>
+        <member name="F:Tiltify.Client.Webhooks.TiltifyWebhookSignatureVerifier.EndpointHeaderName">
+            <summary>The header containing the webhook endpoint identifier.</summary>
+        </member>
+        <member name="M:Tiltify.Client.Webhooks.TiltifyWebhookSignatureVerifier.Verify(System.Byte[],System.String,System.String,System.String)">
+            <summary>
+            Verifies the Tiltify webhook signature.
+            </summary>
+            <param name="body">The raw request body bytes.</param>
+            <param name="timestamp">The value of the <c>X-Tiltify-Timestamp</c> header.</param>
+            <param name="providedSignature">The value of the <c>X-Tiltify-Signature</c> header.</param>
+            <param name="signingSecret">The webhook signing secret configured in the Tiltify dashboard.</param>
+            <returns>
+            <see langword="true"/> when the signature matches the computed digest; otherwise <see langword="false"/>.
+            </returns>
+        </member>
+    </members>
+</doc>

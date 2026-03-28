@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>preview</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <IsPackable>true</IsPackable>
+    <PackageId>Tiltify.Client.Generated</PackageId>
+    <Title>Tiltify.Client.Generated</Title>
+    <Authors>Agash</Authors>
+    <Company>Agash</Company>
+    <Description>Generated Kiota client for the Tiltify v5 API.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryType>git</RepositoryType>
+    <NoWarn>CS1591</NoWarn>
+    <MinVerTagPrefix>v</MinVerTagPrefix>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Kiota.Abstractions" />
+    <PackageReference Include="Microsoft.Kiota.Http.HttpClientLibrary" />
+    <PackageReference Include="Microsoft.Kiota.Serialization.Json" />
+    <PackageReference Include="Microsoft.Kiota.Serialization.Form" />
+    <PackageReference Include="Microsoft.Kiota.Serialization.Multipart" />
+    <PackageReference Include="Microsoft.Kiota.Serialization.Text" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MinVer" PrivateAssets="all" />
+    <PackageReference Include="DotNet.ReproducibleBuilds" PrivateAssets="all" />
+  </ItemGroup>
+</Project>

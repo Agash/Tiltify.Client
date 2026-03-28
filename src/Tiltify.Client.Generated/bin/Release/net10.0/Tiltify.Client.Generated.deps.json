@@ -1,0 +1,189 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "Tiltify.Client.Generated/0.0.0-alpha.0": {
+        "dependencies": {
+          "Microsoft.Kiota.Abstractions": "1.22.1",
+          "Microsoft.Kiota.Http.HttpClientLibrary": "1.22.1",
+          "Microsoft.Kiota.Serialization.Form": "1.22.1",
+          "Microsoft.Kiota.Serialization.Json": "1.22.1",
+          "Microsoft.Kiota.Serialization.Multipart": "1.22.1",
+          "Microsoft.Kiota.Serialization.Text": "1.22.1"
+        },
+        "runtime": {
+          "Tiltify.Client.Generated.dll": {}
+        }
+      },
+      "Microsoft.Extensions.DependencyInjection.Abstractions/6.0.0": {
+        "runtime": {
+          "lib/net6.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.0.21.52210"
+          }
+        }
+      },
+      "Microsoft.IO.RecyclableMemoryStream/3.0.1": {
+        "runtime": {
+          "lib/net6.0/Microsoft.IO.RecyclableMemoryStream.dll": {
+            "assemblyVersion": "3.0.1.0",
+            "fileVersion": "3.0.1.0"
+          }
+        }
+      },
+      "Microsoft.Kiota.Abstractions/1.22.1": {
+        "dependencies": {
+          "Std.UriTemplate": "2.0.8"
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Kiota.Abstractions.dll": {
+            "assemblyVersion": "1.22.1.0",
+            "fileVersion": "1.22.1.0"
+          }
+        }
+      },
+      "Microsoft.Kiota.Http.HttpClientLibrary/1.22.1": {
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "6.0.0",
+          "Microsoft.Kiota.Abstractions": "1.22.1"
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Kiota.Http.HttpClientLibrary.dll": {
+            "assemblyVersion": "1.22.1.0",
+            "fileVersion": "1.22.1.0"
+          }
+        }
+      },
+      "Microsoft.Kiota.Serialization.Form/1.22.1": {
+        "dependencies": {
+          "Microsoft.IO.RecyclableMemoryStream": "3.0.1",
+          "Microsoft.Kiota.Abstractions": "1.22.1"
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Kiota.Serialization.Form.dll": {
+            "assemblyVersion": "1.22.1.0",
+            "fileVersion": "1.22.1.0"
+          }
+        }
+      },
+      "Microsoft.Kiota.Serialization.Json/1.22.1": {
+        "dependencies": {
+          "Microsoft.IO.RecyclableMemoryStream": "3.0.1",
+          "Microsoft.Kiota.Abstractions": "1.22.1"
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Kiota.Serialization.Json.dll": {
+            "assemblyVersion": "1.22.1.0",
+            "fileVersion": "1.22.1.0"
+          }
+        }
+      },
+      "Microsoft.Kiota.Serialization.Multipart/1.22.1": {
+        "dependencies": {
+          "Microsoft.IO.RecyclableMemoryStream": "3.0.1",
+          "Microsoft.Kiota.Abstractions": "1.22.1"
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Kiota.Serialization.Multipart.dll": {
+            "assemblyVersion": "1.22.1.0",
+            "fileVersion": "1.22.1.0"
+          }
+        }
+      },
+      "Microsoft.Kiota.Serialization.Text/1.22.1": {
+        "dependencies": {
+          "Microsoft.IO.RecyclableMemoryStream": "3.0.1",
+          "Microsoft.Kiota.Abstractions": "1.22.1"
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Kiota.Serialization.Text.dll": {
+            "assemblyVersion": "1.22.1.0",
+            "fileVersion": "1.22.1.0"
+          }
+        }
+      },
+      "Std.UriTemplate/2.0.8": {
+        "runtime": {
+          "lib/net5.0/Std.UriTemplate.dll": {
+            "assemblyVersion": "2.0.8.0",
+            "fileVersion": "2.0.8.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Tiltify.Client.Generated/0.0.0-alpha.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Microsoft.Extensions.DependencyInjection.Abstractions/6.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-xlzi2IYREJH3/m6+lUrQlujzX8wDitm4QGnUu6kUXTQAWPuZY8i+ticFJbzfqaetLA6KR/rO6Ew/HuYD+bxifg==",
+      "path": "microsoft.extensions.dependencyinjection.abstractions/6.0.0",
+      "hashPath": "microsoft.extensions.dependencyinjection.abstractions.6.0.0.nupkg.sha512"
+    },
+    "Microsoft.IO.RecyclableMemoryStream/3.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-s/s20YTVY9r9TPfTrN5g8zPF1YhwxyqO6PxUkrYTGI2B+OGPe9AdajWZrLhFqXIvqIW23fnUE4+ztrUWNU1+9g==",
+      "path": "microsoft.io.recyclablememorystream/3.0.1",
+      "hashPath": "microsoft.io.recyclablememorystream.3.0.1.nupkg.sha512"
+    },
+    "Microsoft.Kiota.Abstractions/1.22.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-oalsaAAFmMnC3OdpKvBPC9lizUZIRqd2gWk6PuCVP2aHPOlHTVS/U7E9htlVtp0RJ9ir0qkcSjtUt1sl5B4u7A==",
+      "path": "microsoft.kiota.abstractions/1.22.1",
+      "hashPath": "microsoft.kiota.abstractions.1.22.1.nupkg.sha512"
+    },
+    "Microsoft.Kiota.Http.HttpClientLibrary/1.22.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-tRqS/CyzzsbJCLItJPwAfOi3YjMLnu1wzyKHDWDbS34+1Xv2mJsxVsZTRvwjblZZcgy1wRQ/LL6AcozSaDkBTQ==",
+      "path": "microsoft.kiota.http.httpclientlibrary/1.22.1",
+      "hashPath": "microsoft.kiota.http.httpclientlibrary.1.22.1.nupkg.sha512"
+    },
+    "Microsoft.Kiota.Serialization.Form/1.22.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-316VXS9ezoruCJzeW4IWQjJfN2okHmsThSXr+NrANBGbpOfYE+l8P+lDtVRNQgHtMNHNEd2WYeMFQMc0G7hKeg==",
+      "path": "microsoft.kiota.serialization.form/1.22.1",
+      "hashPath": "microsoft.kiota.serialization.form.1.22.1.nupkg.sha512"
+    },
+    "Microsoft.Kiota.Serialization.Json/1.22.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-YHiGIrZ2quJSK72FYusmAt+4fOBO+l9vnZtrnH2RvlG8+gJ2U0gO0mX79rCPicwQFdvwXzYCf6YqWrWuMSsC+Q==",
+      "path": "microsoft.kiota.serialization.json/1.22.1",
+      "hashPath": "microsoft.kiota.serialization.json.1.22.1.nupkg.sha512"
+    },
+    "Microsoft.Kiota.Serialization.Multipart/1.22.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-4DAAmAb5kn1LuGD6Id6OcYNKpjCOSdDrtRKSKlr/t6b6RYubkhJSwsXH/0LvEG5fk34JN62yq0z+KMDMUqfxHg==",
+      "path": "microsoft.kiota.serialization.multipart/1.22.1",
+      "hashPath": "microsoft.kiota.serialization.multipart.1.22.1.nupkg.sha512"
+    },
+    "Microsoft.Kiota.Serialization.Text/1.22.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-29VFjaIXyWDHPWVPadckxnNpoj7Owu9nVtXPi6PLg2qZt2Iepw/4yL0JBf9AkDQQtzon6fy5AnGxOUnHhy4MtA==",
+      "path": "microsoft.kiota.serialization.text/1.22.1",
+      "hashPath": "microsoft.kiota.serialization.text.1.22.1.nupkg.sha512"
+    },
+    "Std.UriTemplate/2.0.8": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-IAR4gJlLVD4r/FsU/rDb1+9sbB3/tCFVZz5IzlbM2yHoiUisBi5Ek/KXRUF7RcqNARka79EoaOz9INnXvQ/O6w==",
+      "path": "std.uritemplate/2.0.8",
+      "hashPath": "std.uritemplate.2.0.8.nupkg.sha512"
+    }
+  }
+}
