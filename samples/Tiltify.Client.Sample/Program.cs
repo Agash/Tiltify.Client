@@ -439,7 +439,9 @@ internal static class SampleApplication
         else if (evt is TiltifyFactWebhookEvent fact)
         {
             grid.AddRow("[bold]Fact[/]", Markup.Escape(fact.Data.Name ?? "-"));
-            grid.AddRow("[bold]Value[/]", Markup.Escape(fact.Data.Value ?? "-"));
+            grid.AddRow("[bold]Status[/]", Markup.Escape(fact.Data.Status ?? "-"));
+            grid.AddRow("[bold]Amount Raised[/]", Markup.Escape(fact.Data.AmountRaised?.Value ?? "-"));
+            grid.AddRow("[bold]Goal[/]", Markup.Escape(fact.Data.Goal?.Value ?? "-"));
             grid.AddRow("[bold]Active[/]", fact.Data.Active == true ? "[green]yes[/]" : "[yellow]no[/]");
             grid.AddRow("[bold]Direct[/]", fact.IsDirect ? "[green]yes[/]" : "[yellow]no (indirect)[/]");
         }
