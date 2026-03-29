@@ -18,6 +18,12 @@
     <PackageVersion Include="DotNet.ReproducibleBuilds" Version="2.0.2" />
   </ItemGroup>
 
+  <!-- Sample packages -->
+  <ItemGroup>
+    <PackageVersion Include="DevTunnels.Client" Version="0.1.0" />
+    <PackageVersion Include="Spectre.Console" Version="0.54.0" />
+  </ItemGroup>
+
   <!-- Test packages -->
   <ItemGroup>
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.0" />
