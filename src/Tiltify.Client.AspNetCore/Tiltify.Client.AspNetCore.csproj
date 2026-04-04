@@ -9,9 +9,14 @@
     <IsPackable>true</IsPackable>
     <PackageId>Tiltify.Client.AspNetCore</PackageId>
     <Title>Tiltify.Client.AspNetCore</Title>
+    <Authors>Agash</Authors>
+    <Company>Agash</Company>
     <Description>ASP.NET Core adapter package for Tiltify.Client.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryType>git</RepositoryType>
+    <MinVerTagPrefix>v</MinVerTagPrefix>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
 
   <ItemGroup>

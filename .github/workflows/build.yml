@@ -46,11 +46,28 @@ jobs:
       run: dotnet test tests/Tiltify.Client.Tests/Tiltify.Client.Tests.csproj --configuration Release --no-build --verbosity normal
 
     - name: Pack packages
-      if: (github.event_name == 'push' && github.ref == 'refs/heads/master') || github.event_name == 'release'
+      if: (github.event_name == 'push' && github.ref == 'refs/heads/master') || github.event_name == 'release' || github.event_name == 'workflow_dispatch'
       run: dotnet pack Tiltify.Client.slnx --configuration Release --no-build --output ${{ env.NuGetDirectory }}
 
+    - name: Verify expected packages
+      if: (github.event_name == 'push' && github.ref == 'refs/heads/master') || github.event_name == 'release' || github.event_name == 'workflow_dispatch'
+      run: |
+        $expected = @(
+          'Tiltify.Client',
+          'Tiltify.Client.Generated',
+          'Tiltify.Client.DependencyInjection',
+          'Tiltify.Client.AspNetCore'
+        )
+        $packed = Get-ChildItem "${{ env.NuGetDirectory }}" -Filter *.nupkg |
+          ForEach-Object { $_.Name -replace '\.\d+.*\.nupkg$', '' }
+        $missing = $expected | Where-Object { $_ -notin $packed }
+        if ($missing.Count -gt 0) {
+          throw "Missing expected packages: $($missing -join ', ')"
+        }
+        Write-Host "All $($expected.Count) expected packages verified."
+
     - name: Upload package artifact
-      if: (github.event_name == 'push' && github.ref == 'refs/heads/master') || github.event_name == 'release'
+      if: (github.event_name == 'push' && github.ref == 'refs/heads/master') || github.event_name == 'release' || github.event_name == 'workflow_dispatch'
       uses: actions/upload-artifact@v4
       with:
         name: nuget-package
@@ -61,7 +78,7 @@ jobs:
   publish_nuget:
     name: Publish NuGet Packages
     needs: [ build_and_test ]
-    if: github.event_name == 'release' && github.event.action == 'published'
+    if: (github.event_name == 'release' && github.event.action == 'published') || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       contents: read
