@@ -1,5 +1,9 @@
 # Tiltify.Client
 
+[![NuGet](https://img.shields.io/nuget/v/Tiltify.Client.svg?include_prereleases)](https://www.nuget.org/packages/Tiltify.Client/)
+[![CI](https://github.com/Agash/Tiltify.Client/actions/workflows/build.yml/badge.svg)](https://github.com/Agash/Tiltify.Client/actions/workflows/build.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.txt)
+
 A modern, async-first .NET 10 client library for the [Tiltify v5 API](https://v5api.tiltify.com), featuring:
 
 - **Kiota-generated** typed REST client from the official OpenAPI spec
