@@ -16,6 +16,7 @@ A modern, async-first .NET 10 client library for the [Tiltify v5 API](https://v5
 | `Tiltify.Client` | Core client, auth, webhook handler and models |
 | `Tiltify.Client.Generated` | Kiota-generated REST client |
 | `Tiltify.Client.DependencyInjection` | DI registration helpers |
+| `Tiltify.Client.AspNetCore` | ASP.NET Core middleware and endpoint helpers for webhook ingestion |
 
 ## Quick Start
 
