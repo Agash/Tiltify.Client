@@ -41,7 +41,7 @@ public static class TiltifyEndpointRouteBuilderExtensions
 
         configure(options);
 
-        return endpoints.MapPost(pattern, async (HttpContext context) =>
+        return endpoints.MapPost(pattern, async context =>
         {
             ITiltifyWebhookHandler handler = context.RequestServices.GetRequiredService<ITiltifyWebhookHandler>();
 

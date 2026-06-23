@@ -1,13 +1,13 @@
-using DevTunnels.Client;
-using Spectre.Console;
 using System.Collections.Concurrent;
+using DevTunnels.Client;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Spectre.Console;
 using Tiltify.Client.AspNetCore;
 using Tiltify.Client.DependencyInjection;
 using Tiltify.Client.Events;
 using Tiltify.Client.Options;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 
 CancellationTokenSource shutdown = new();
 

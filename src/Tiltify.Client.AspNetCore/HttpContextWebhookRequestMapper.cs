@@ -44,10 +44,12 @@ public static class HttpContextWebhookRequestMapper
             context.Request.Body.Position = 0;
         }
 
+        string? rawPath = context.Request.Path.Value;
+
         return new WebhookRequest
         {
             Method = context.Request.Method,
-            Path = context.Request.Path.HasValue ? context.Request.Path.Value! : "/",
+            Path = string.IsNullOrEmpty(rawPath) ? "/" : rawPath,
             QueryString = context.Request.QueryString.HasValue ? context.Request.QueryString.Value : null,
             ContentType = context.Request.ContentType,
             Headers = headers,

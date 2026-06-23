@@ -36,7 +36,9 @@ public sealed class TiltifyWebhookSignatureVerifier
     /// <returns>
     /// <see langword="true"/> when the signature matches the computed digest; otherwise <see langword="false"/>.
     /// </returns>
+#pragma warning disable CA1822 // Resolved from DI and invoked as an instance seam; keeping it instance-level preserves the public API and testability.
     public bool Verify(byte[] body, string? timestamp, string? providedSignature, string signingSecret)
+#pragma warning restore CA1822
     {
         ArgumentNullException.ThrowIfNull(body);
         ArgumentException.ThrowIfNullOrEmpty(signingSecret);

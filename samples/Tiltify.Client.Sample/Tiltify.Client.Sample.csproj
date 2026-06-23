@@ -8,6 +8,9 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <IsPackable>false</IsPackable>
+    <!-- Non-shipped sample app: code-style enforcement is inappropriate here. -->
+    <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+    <NoWarn>$(NoWarn);CA1305</NoWarn>
     <UserSecretsId>Tiltify.Client.Sample</UserSecretsId>
   </PropertyGroup>
 

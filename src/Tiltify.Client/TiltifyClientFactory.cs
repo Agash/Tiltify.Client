@@ -41,7 +41,11 @@ public sealed class TiltifyClientFactory : ITiltifyClientFactory, IDisposable
     /// <inheritdoc />
     public void Dispose()
     {
-        if (_disposed) return;
+        if (_disposed)
+        {
+            return;
+        }
+
         _disposed = true;
         _tokenProvider.Dispose();
     }

@@ -33,7 +33,7 @@ public sealed class TiltifyAuthenticationProvider : IAuthenticationProvider
         ArgumentNullException.ThrowIfNull(request);
 
         string token = await _tokenProvider.GetTokenAsync(cancellationToken).ConfigureAwait(false);
-        request.Headers.TryAdd("Authorization", $"Bearer {token}");
-        request.Headers.TryAdd("Client-Id", _clientId);
+        _ = request.Headers.TryAdd("Authorization", $"Bearer {token}");
+        _ = request.Headers.TryAdd("Client-Id", _clientId);
     }
 }

@@ -1,5 +1,5 @@
-using Agash.Webhook.Abstractions;
 using System.Text.Json;
+using Agash.Webhook.Abstractions;
 using Tiltify.Client.Abstractions;
 using Tiltify.Client.Events;
 using Tiltify.Client.Internal;
@@ -14,7 +14,7 @@ namespace Tiltify.Client.Webhooks;
 /// </summary>
 public sealed class TiltifyWebhookHandler : ITiltifyWebhookHandler
 {
-    private static readonly JsonSerializerOptions s_jsonOptions = new(JsonSerializerDefaults.Web);
+    private static readonly JsonSerializerOptions _jsonOptions = new(JsonSerializerDefaults.Web);
 
     private readonly TiltifyWebhookSignatureVerifier _signatureVerifier;
 
@@ -60,7 +60,7 @@ public sealed class TiltifyWebhookHandler : ITiltifyWebhookHandler
         TiltifyWebhookEnvelope? envelope;
         try
         {
-            envelope = JsonSerializer.Deserialize<TiltifyWebhookEnvelope>(request.Body, s_jsonOptions);
+            envelope = JsonSerializer.Deserialize<TiltifyWebhookEnvelope>(request.Body, _jsonOptions);
         }
         catch (JsonException ex)
         {
@@ -93,35 +93,46 @@ public sealed class TiltifyWebhookHandler : ITiltifyWebhookHandler
         {
             case TiltifyWebhookEventNames.DirectDonationUpdated:
             case TiltifyWebhookEventNames.IndirectDonationUpdated:
-            {
-                TiltifyDonation? donation = TryDeserialize<TiltifyDonation>(envelope.Data);
-                if (donation is null) break;
-                return new TiltifyDonationWebhookEvent
                 {
-                    DeliveryId = envelope.Meta.Id,
-                    EventName = eventName,
-                    GeneratedAt = envelope.Meta.GeneratedAt,
-                    Meta = envelope.Meta,
-                    Data = donation,
-                    IsDirect = eventName == TiltifyWebhookEventNames.DirectDonationUpdated,
-                };
-            }
+                    TiltifyDonation? donation = TryDeserialize<TiltifyDonation>(envelope.Data);
+                    if (donation is null)
+                    {
+                        break;
+                    }
+
+                    return new TiltifyDonationWebhookEvent
+                    {
+                        DeliveryId = envelope.Meta.Id,
+                        EventName = eventName,
+                        GeneratedAt = envelope.Meta.GeneratedAt,
+                        Meta = envelope.Meta,
+                        Data = donation,
+                        IsDirect = eventName == TiltifyWebhookEventNames.DirectDonationUpdated,
+                    };
+                }
 
             case TiltifyWebhookEventNames.DirectFactUpdated:
             case TiltifyWebhookEventNames.IndirectFactUpdated:
-            {
-                TiltifyFact? fact = TryDeserialize<TiltifyFact>(envelope.Data);
-                if (fact is null) break;
-                return new TiltifyFactWebhookEvent
                 {
-                    DeliveryId = envelope.Meta.Id,
-                    EventName = eventName,
-                    GeneratedAt = envelope.Meta.GeneratedAt,
-                    Meta = envelope.Meta,
-                    Data = fact,
-                    IsDirect = eventName == TiltifyWebhookEventNames.DirectFactUpdated,
-                };
-            }
+                    TiltifyFact? fact = TryDeserialize<TiltifyFact>(envelope.Data);
+                    if (fact is null)
+                    {
+                        break;
+                    }
+
+                    return new TiltifyFactWebhookEvent
+                    {
+                        DeliveryId = envelope.Meta.Id,
+                        EventName = eventName,
+                        GeneratedAt = envelope.Meta.GeneratedAt,
+                        Meta = envelope.Meta,
+                        Data = fact,
+                        IsDirect = eventName == TiltifyWebhookEventNames.DirectFactUpdated,
+                    };
+                }
+
+            default:
+                break;
         }
 
         return new TiltifyUnknownWebhookEvent
@@ -138,7 +149,7 @@ public sealed class TiltifyWebhookHandler : ITiltifyWebhookHandler
     {
         try
         {
-            return element.Deserialize<T>(s_jsonOptions);
+            return element.Deserialize<T>(_jsonOptions);
         }
         catch (JsonException)
         {

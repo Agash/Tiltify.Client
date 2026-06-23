@@ -16,11 +16,21 @@ internal static class ConstantTimeStringComparer
     [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     public static bool Equals(string? a, string? b)
     {
-        if (a is null && b is null) return true;
-        if (a is null || b is null) return false;
+        if (a is null && b is null)
+        {
+            return true;
+        }
+
+        if (a is null || b is null)
+        {
+            return false;
+        }
 
         int length = a.Length;
-        if (length != b.Length) return false;
+        if (length != b.Length)
+        {
+            return false;
+        }
 
         int result = 0;
         for (int i = 0; i < length; i++)

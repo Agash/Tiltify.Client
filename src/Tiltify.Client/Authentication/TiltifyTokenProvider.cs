@@ -1,6 +1,8 @@
-using Microsoft.Extensions.Options;
+#if !NET11_0_OR_GREATER
 using System.Net.Http.Json;
+#endif
 using System.Text.Json;
+using Microsoft.Extensions.Options;
 using Tiltify.Client.Internal;
 using Tiltify.Client.Options;
 
@@ -12,7 +14,7 @@ namespace Tiltify.Client.Authentication;
 /// </summary>
 public sealed class TiltifyTokenProvider : IDisposable
 {
-    private static readonly JsonSerializerOptions s_jsonOptions = new(JsonSerializerDefaults.Web);
+    private static readonly JsonSerializerOptions _jsonOptions = new(JsonSerializerDefaults.Web);
 
     private readonly TiltifyClientOptions _options;
     private readonly HttpClient _http;
@@ -49,20 +51,24 @@ public sealed class TiltifyTokenProvider : IDisposable
     {
         int bufferSeconds = _options.TokenRefreshBufferSeconds;
         if (_cachedToken is not null && DateTimeOffset.UtcNow.AddSeconds(bufferSeconds) < _tokenExpiry)
+        {
             return _cachedToken;
+        }
 
         await _lock.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
             if (_cachedToken is not null && DateTimeOffset.UtcNow.AddSeconds(bufferSeconds) < _tokenExpiry)
+            {
                 return _cachedToken;
+            }
 
             (_cachedToken, _tokenExpiry) = await FetchTokenAsync(cancellationToken).ConfigureAwait(false);
             return _cachedToken;
         }
         finally
         {
-            _lock.Release();
+            _ = _lock.Release();
         }
     }
 
@@ -78,10 +84,10 @@ public sealed class TiltifyTokenProvider : IDisposable
         ]);
 
         using var response = await _http.SendAsync(request, cancellationToken).ConfigureAwait(false);
-        response.EnsureSuccessStatusCode();
+        _ = response.EnsureSuccessStatusCode();
 
         TiltifyTokenResponse? tokenResponse = await response.Content
-            .ReadFromJsonAsync<TiltifyTokenResponse>(s_jsonOptions, cancellationToken)
+            .ReadFromJsonAsync<TiltifyTokenResponse>(_jsonOptions, cancellationToken)
             .ConfigureAwait(false);
 
         if (tokenResponse is null || string.IsNullOrEmpty(tokenResponse.AccessToken))
@@ -97,6 +103,9 @@ public sealed class TiltifyTokenProvider : IDisposable
     public void Dispose()
     {
         _lock.Dispose();
-        if (_ownsHttp) _http.Dispose();
+        if (_ownsHttp)
+        {
+            _http.Dispose();
+        }
     }
 }

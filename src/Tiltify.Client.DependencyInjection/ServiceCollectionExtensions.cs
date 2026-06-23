@@ -1,7 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
-using Tiltify.Client;
 using Tiltify.Client.Abstractions;
 using Tiltify.Client.Authentication;
 using Tiltify.Client.Options;
@@ -27,7 +26,7 @@ public static class ServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configure);
 
-        services.Configure(configure);
+        _ = services.Configure(configure);
         return services.AddTiltifyClientCore();
     }
 
@@ -45,7 +44,7 @@ public static class ServiceCollectionExtensions
 
     private static IServiceCollection AddTiltifyClientCore(this IServiceCollection services)
     {
-        services.AddHttpClient();
+        _ = services.AddHttpClient();
 
         services.TryAddSingleton(sp =>
         {
