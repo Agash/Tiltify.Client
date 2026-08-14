@@ -1,4 +1,4 @@
-<Project>
+﻿<Project>
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
@@ -15,6 +15,7 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/Agash/Tiltify.Client</RepositoryUrl>
+    <PackageTags>tiltify;charity;fundraising;donations;webhooks;api-client;kiota;dotnet;csharp;aot</PackageTags>
     <PackageProjectUrl>https://github.com/Agash/Tiltify.Client</PackageProjectUrl>
     <GenerateDocumentationFile Condition="'$(IsPackable)' == 'true'">true</GenerateDocumentationFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
