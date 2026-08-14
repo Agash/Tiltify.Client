@@ -1,7 +1,7 @@
 #if !NET11_0_OR_GREATER
 using System.Net.Http.Json;
 #endif
-using System.Text.Json;
+using Tiltify.Client.Serialization;
 using Microsoft.Extensions.Options;
 using Tiltify.Client.Internal;
 using Tiltify.Client.Options;
@@ -14,8 +14,6 @@ namespace Tiltify.Client.Authentication;
 /// </summary>
 public sealed class TiltifyTokenProvider : IDisposable
 {
-    private static readonly JsonSerializerOptions _jsonOptions = new(JsonSerializerDefaults.Web);
-
     private readonly TiltifyClientOptions _options;
     private readonly HttpClient _http;
     private readonly bool _ownsHttp;
@@ -87,7 +85,7 @@ public sealed class TiltifyTokenProvider : IDisposable
         _ = response.EnsureSuccessStatusCode();
 
         TiltifyTokenResponse? tokenResponse = await response.Content
-            .ReadFromJsonAsync<TiltifyTokenResponse>(_jsonOptions, cancellationToken)
+            .ReadFromJsonAsync(TiltifyJsonContext.Default.TiltifyTokenResponse, cancellationToken)
             .ConfigureAwait(false);
 
         if (tokenResponse is null || string.IsNullOrEmpty(tokenResponse.AccessToken))

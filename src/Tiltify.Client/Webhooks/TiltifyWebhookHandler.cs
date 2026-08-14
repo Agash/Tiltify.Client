@@ -1,4 +1,6 @@
 using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
+using Tiltify.Client.Serialization;
 using Agash.Webhook.Abstractions;
 using Tiltify.Client.Abstractions;
 using Tiltify.Client.Events;
@@ -14,8 +16,6 @@ namespace Tiltify.Client.Webhooks;
 /// </summary>
 public sealed class TiltifyWebhookHandler : ITiltifyWebhookHandler
 {
-    private static readonly JsonSerializerOptions _jsonOptions = new(JsonSerializerDefaults.Web);
-
     private readonly TiltifyWebhookSignatureVerifier _signatureVerifier;
 
     /// <summary>
@@ -60,7 +60,7 @@ public sealed class TiltifyWebhookHandler : ITiltifyWebhookHandler
         TiltifyWebhookEnvelope? envelope;
         try
         {
-            envelope = JsonSerializer.Deserialize<TiltifyWebhookEnvelope>(request.Body, _jsonOptions);
+            envelope = JsonSerializer.Deserialize(request.Body, TiltifyJsonContext.Default.TiltifyWebhookEnvelope);
         }
         catch (JsonException ex)
         {
@@ -94,7 +94,7 @@ public sealed class TiltifyWebhookHandler : ITiltifyWebhookHandler
             case TiltifyWebhookEventNames.DirectDonationUpdated:
             case TiltifyWebhookEventNames.IndirectDonationUpdated:
                 {
-                    TiltifyDonation? donation = TryDeserialize<TiltifyDonation>(envelope.Data);
+                    TiltifyDonation? donation = TryDeserialize(envelope.Data, TiltifyJsonContext.Default.TiltifyDonation);
                     if (donation is null)
                     {
                         break;
@@ -114,7 +114,7 @@ public sealed class TiltifyWebhookHandler : ITiltifyWebhookHandler
             case TiltifyWebhookEventNames.DirectFactUpdated:
             case TiltifyWebhookEventNames.IndirectFactUpdated:
                 {
-                    TiltifyFact? fact = TryDeserialize<TiltifyFact>(envelope.Data);
+                    TiltifyFact? fact = TryDeserialize(envelope.Data, TiltifyJsonContext.Default.TiltifyFact);
                     if (fact is null)
                     {
                         break;
@@ -145,11 +145,11 @@ public sealed class TiltifyWebhookHandler : ITiltifyWebhookHandler
         };
     }
 
-    private static T? TryDeserialize<T>(JsonElement element)
+    private static T? TryDeserialize<T>(JsonElement element, JsonTypeInfo<T> typeInfo)
     {
         try
         {
-            return element.Deserialize<T>(_jsonOptions);
+            return element.Deserialize(typeInfo);
         }
         catch (JsonException)
         {
