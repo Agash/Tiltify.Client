@@ -1,10 +1,11 @@
 using System.Security.Cryptography;
 using System.Text;
 using Tiltify.Client.Webhooks;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tiltify.Client.Tests.Webhooks;
 
+[TestClass]
 public sealed class TiltifyWebhookSignatureVerifierTests
 {
     private readonly TiltifyWebhookSignatureVerifier _verifier = new();
@@ -20,7 +21,7 @@ public sealed class TiltifyWebhookSignatureVerifierTests
         return (bodyBytes, timestamp, sig);
     }
 
-    [Fact]
+    [TestMethod]
     public void Verify_ValidSignature_ReturnsTrue()
     {
         const string body = "{\"meta\":{\"event_name\":\"public:direct:donation_updated\"}}";
@@ -29,10 +30,10 @@ public sealed class TiltifyWebhookSignatureVerifierTests
 
         bool result = _verifier.Verify(bodyBytes, ts, sig, Secret);
 
-        Assert.True(result);
+        Assert.IsTrue(result);
     }
 
-    [Fact]
+    [TestMethod]
     public void Verify_WrongSecret_ReturnsFalse()
     {
         const string body = "{\"meta\":{}}";
@@ -41,10 +42,10 @@ public sealed class TiltifyWebhookSignatureVerifierTests
 
         bool result = _verifier.Verify(bodyBytes, ts, sig, "wrong-secret");
 
-        Assert.False(result);
+        Assert.IsFalse(result);
     }
 
-    [Fact]
+    [TestMethod]
     public void Verify_TamperedBody_ReturnsFalse()
     {
         const string originalBody = "{\"meta\":{\"id\":\"abc\"}}";
@@ -54,22 +55,22 @@ public sealed class TiltifyWebhookSignatureVerifierTests
 
         bool result = _verifier.Verify(Encoding.UTF8.GetBytes(tamperedBody), ts, sig, Secret);
 
-        Assert.False(result);
+        Assert.IsFalse(result);
     }
 
-    [Theory]
-    [InlineData(null, "sig")]
-    [InlineData("ts", null)]
-    [InlineData("", "sig")]
-    [InlineData("ts", "")]
+    [TestMethod]
+    [DataRow(null, "sig")]
+    [DataRow("ts", null)]
+    [DataRow("", "sig")]
+    [DataRow("ts", "")]
     public void Verify_MissingHeader_ReturnsFalse(string? timestamp, string? signature)
     {
         bool result = _verifier.Verify(Encoding.UTF8.GetBytes("{}"), timestamp, signature, Secret);
 
-        Assert.False(result);
+        Assert.IsFalse(result);
     }
 
-    [Fact]
+    [TestMethod]
     public void Verify_EmptyBody_ValidSignature_ReturnsTrue()
     {
         const string body = "";
@@ -78,6 +79,6 @@ public sealed class TiltifyWebhookSignatureVerifierTests
 
         bool result = _verifier.Verify(bodyBytes, ts, sig, Secret);
 
-        Assert.True(result);
+        Assert.IsTrue(result);
     }
 }

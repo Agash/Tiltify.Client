@@ -4,10 +4,11 @@ using Agash.Webhook.Abstractions;
 using Tiltify.Client.Events;
 using Tiltify.Client.Options;
 using Tiltify.Client.Webhooks;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tiltify.Client.Tests.Webhooks;
 
+[TestClass]
 public sealed class TiltifyWebhookHandlerTests
 {
     private const string Secret = "test-signing-secret";
@@ -54,7 +55,7 @@ public sealed class TiltifyWebhookHandlerTests
 
     private static TiltifyWebhookOptions Options => new() { SigningSecret = Secret };
 
-    [Fact]
+    [TestMethod]
     public async Task HandleAsync_ValidDonationEvent_ReturnsDonationWebhookEvent()
     {
         const string body = """
@@ -84,20 +85,21 @@ public sealed class TiltifyWebhookHandlerTests
         WebhookHandleResult<TiltifyWebhookEvent> result =
             await _handler.HandleAsync(BuildRequest(body, Secret), Options);
 
-        Assert.True(result.IsAuthenticated);
-        Assert.True(result.IsKnownEvent);
-        Assert.Equal(200, result.Response.StatusCode);
+        Assert.IsTrue(result.IsAuthenticated);
+        Assert.IsTrue(result.IsKnownEvent);
+        Assert.AreEqual(200, result.Response.StatusCode);
 
-        TiltifyDonationWebhookEvent donation = Assert.IsType<TiltifyDonationWebhookEvent>(result.Event);
-        Assert.Equal("delivery-abc", donation.DeliveryId);
-        Assert.True(donation.IsDirect);
-        Assert.Equal("don-1", donation.Data.Id);
-        Assert.Equal("TestDonor", donation.Data.DonorName);
-        Assert.Equal("25.00", donation.Data.Amount?.Value);
-        Assert.Equal("USD", donation.Data.Amount?.Currency);
+        Assert.IsInstanceOfType<TiltifyDonationWebhookEvent>(result.Event);
+        var donation = (TiltifyDonationWebhookEvent)result.Event;
+        Assert.AreEqual("delivery-abc", donation.DeliveryId);
+        Assert.IsTrue(donation.IsDirect);
+        Assert.AreEqual("don-1", donation.Data.Id);
+        Assert.AreEqual("TestDonor", donation.Data.DonorName);
+        Assert.AreEqual("25.00", donation.Data.Amount?.Value);
+        Assert.AreEqual("USD", donation.Data.Amount?.Currency);
     }
 
-    [Fact]
+    [TestMethod]
     public async Task HandleAsync_IndirectDonationEvent_ReturnsDonationEventWithIsDirectFalse()
     {
         const string body = """
@@ -122,12 +124,13 @@ public sealed class TiltifyWebhookHandlerTests
         WebhookHandleResult<TiltifyWebhookEvent> result =
             await _handler.HandleAsync(BuildRequest(body, Secret), Options);
 
-        TiltifyDonationWebhookEvent donation = Assert.IsType<TiltifyDonationWebhookEvent>(result.Event);
-        Assert.False(donation.IsDirect);
-        Assert.Equal("don-2", donation.Data.Id);
+        Assert.IsInstanceOfType<TiltifyDonationWebhookEvent>(result.Event);
+        var donation = (TiltifyDonationWebhookEvent)result.Event;
+        Assert.IsFalse(donation.IsDirect);
+        Assert.AreEqual("don-2", donation.Data.Id);
     }
 
-    [Fact]
+    [TestMethod]
     public async Task HandleAsync_ValidFactEvent_ReturnsFactWebhookEvent()
     {
         const string body = """
@@ -155,17 +158,18 @@ public sealed class TiltifyWebhookHandlerTests
         WebhookHandleResult<TiltifyWebhookEvent> result =
             await _handler.HandleAsync(BuildRequest(body, Secret), Options);
 
-        Assert.True(result.IsAuthenticated);
-        Assert.True(result.IsKnownEvent);
+        Assert.IsTrue(result.IsAuthenticated);
+        Assert.IsTrue(result.IsKnownEvent);
 
-        TiltifyFactWebhookEvent factEvent = Assert.IsType<TiltifyFactWebhookEvent>(result.Event);
-        Assert.True(factEvent.IsDirect);
-        Assert.Equal("fact-1", factEvent.Data.Id);
-        Assert.Equal("Speedrun", factEvent.Data.Name);
-        Assert.True(factEvent.Data.Active);
+        Assert.IsInstanceOfType<TiltifyFactWebhookEvent>(result.Event);
+        var factEvent = (TiltifyFactWebhookEvent)result.Event;
+        Assert.IsTrue(factEvent.IsDirect);
+        Assert.AreEqual("fact-1", factEvent.Data.Id);
+        Assert.AreEqual("Speedrun", factEvent.Data.Name);
+        Assert.IsTrue(factEvent.Data.Active);
     }
 
-    [Fact]
+    [TestMethod]
     public async Task HandleAsync_UnknownEventName_ReturnsUnknownWebhookEvent()
     {
         const string body = """
@@ -185,14 +189,15 @@ public sealed class TiltifyWebhookHandlerTests
         WebhookHandleResult<TiltifyWebhookEvent> result =
             await _handler.HandleAsync(BuildRequest(body, Secret), Options);
 
-        Assert.True(result.IsAuthenticated);
-        Assert.False(result.IsKnownEvent);
+        Assert.IsTrue(result.IsAuthenticated);
+        Assert.IsFalse(result.IsKnownEvent);
 
-        TiltifyUnknownWebhookEvent unknown = Assert.IsType<TiltifyUnknownWebhookEvent>(result.Event);
-        Assert.Equal("public:direct:reward_claimed", unknown.EventName);
+        Assert.IsInstanceOfType<TiltifyUnknownWebhookEvent>(result.Event);
+        var unknown = (TiltifyUnknownWebhookEvent)result.Event;
+        Assert.AreEqual("public:direct:reward_claimed", unknown.EventName);
     }
 
-    [Fact]
+    [TestMethod]
     public async Task HandleAsync_InvalidSignature_Returns401Unauthenticated()
     {
         const string body = """{"meta":{"id":"x","event_name":"public:direct:donation_updated","generated_at":"2024-01-01T00:00:00Z","subscription_source_id":"s","subscription_target_id":"t","attempt_number":1},"data":{}}""";
@@ -215,11 +220,11 @@ public sealed class TiltifyWebhookHandlerTests
         WebhookHandleResult<TiltifyWebhookEvent> result =
             await _handler.HandleAsync(request, Options);
 
-        Assert.False(result.IsAuthenticated);
-        Assert.Equal(401, result.Response.StatusCode);
+        Assert.IsFalse(result.IsAuthenticated);
+        Assert.AreEqual(401, result.Response.StatusCode);
     }
 
-    [Fact]
+    [TestMethod]
     public async Task HandleAsync_NonPostMethod_Returns405()
     {
         const string body = "{}";
@@ -228,11 +233,11 @@ public sealed class TiltifyWebhookHandlerTests
         WebhookHandleResult<TiltifyWebhookEvent> result =
             await _handler.HandleAsync(request, Options);
 
-        Assert.Equal(405, result.Response.StatusCode);
-        Assert.False(result.IsAuthenticated);
+        Assert.AreEqual(405, result.Response.StatusCode);
+        Assert.IsFalse(result.IsAuthenticated);
     }
 
-    [Fact]
+    [TestMethod]
     public async Task HandleAsync_NonJsonContentType_Returns400()
     {
         const string body = "not json";
@@ -241,11 +246,11 @@ public sealed class TiltifyWebhookHandlerTests
         WebhookHandleResult<TiltifyWebhookEvent> result =
             await _handler.HandleAsync(request, Options);
 
-        Assert.Equal(400, result.Response.StatusCode);
-        Assert.False(result.IsAuthenticated);
+        Assert.AreEqual(400, result.Response.StatusCode);
+        Assert.IsFalse(result.IsAuthenticated);
     }
 
-    [Fact]
+    [TestMethod]
     public async Task HandleAsync_MalformedJson_Returns400AfterAuth()
     {
         // Authenticate with valid signature but body isn't valid JSON for the envelope.
@@ -255,10 +260,10 @@ public sealed class TiltifyWebhookHandlerTests
         WebhookHandleResult<TiltifyWebhookEvent> result =
             await _handler.HandleAsync(request, Options);
 
-        Assert.Equal(400, result.Response.StatusCode);
+        Assert.AreEqual(400, result.Response.StatusCode);
         // Auth fails too because content-type check happens first, but body is "not-json-at-all"
         // which doesn't have application/json content type from BuildRequest.
         // Actually BuildRequest defaults to application/json, so content-type passes, but JSON parsing fails.
-        Assert.True(result.IsAuthenticated);
+        Assert.IsTrue(result.IsAuthenticated);
     }
 }
