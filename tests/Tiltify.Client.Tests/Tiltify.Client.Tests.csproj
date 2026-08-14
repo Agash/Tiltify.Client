@@ -20,6 +20,6 @@
 
   <ItemGroup>
     <PackageReference Include="MSTest" />
-    <PackageReference Include="coverlet.MTP" />
+    <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
   </ItemGroup>
 </Project>
