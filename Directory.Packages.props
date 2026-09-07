@@ -8,12 +8,12 @@
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.11" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.11" />
     <PackageVersion Include="Microsoft.Extensions.Options" Version="10.0.11" />
-    <PackageVersion Include="Microsoft.Kiota.Abstractions" Version="2.0.0" />
-    <PackageVersion Include="Microsoft.Kiota.Http.HttpClientLibrary" Version="2.0.0" />
-    <PackageVersion Include="Microsoft.Kiota.Serialization.Form" Version="2.0.0" />
-    <PackageVersion Include="Microsoft.Kiota.Serialization.Json" Version="2.0.0" />
-    <PackageVersion Include="Microsoft.Kiota.Serialization.Multipart" Version="2.0.0" />
-    <PackageVersion Include="Microsoft.Kiota.Serialization.Text" Version="2.0.0" />
+    <PackageVersion Include="Microsoft.Kiota.Abstractions" Version="2.1.1" />
+    <PackageVersion Include="Microsoft.Kiota.Http.HttpClientLibrary" Version="2.1.1" />
+    <PackageVersion Include="Microsoft.Kiota.Serialization.Form" Version="2.1.1" />
+    <PackageVersion Include="Microsoft.Kiota.Serialization.Json" Version="2.1.1" />
+    <PackageVersion Include="Microsoft.Kiota.Serialization.Multipart" Version="2.1.1" />
+    <PackageVersion Include="Microsoft.Kiota.Serialization.Text" Version="2.1.1" />
     <PackageVersion Include="MinVer" Version="7.0.0" />
     <PackageVersion Include="DotNet.ReproducibleBuilds" Version="2.0.5" />
   </ItemGroup>
@@ -26,7 +26,7 @@
 
   <!-- Test packages -->
   <ItemGroup>
-    <PackageVersion Include="MSTest" Version="4.3.3" />
-    <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.10.0" />
+    <PackageVersion Include="MSTest" Version="4.4.0" />
+    <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.11.0" />
   </ItemGroup>
 </Project>
