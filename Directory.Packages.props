@@ -5,9 +5,9 @@
 
   <ItemGroup>
     <PackageVersion Include="Agash.Webhook.Abstractions" Version="1.0.2" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.11" />
-    <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.11" />
-    <PackageVersion Include="Microsoft.Extensions.Options" Version="10.0.11" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.Extensions.Options" Version="10.0.12" />
     <PackageVersion Include="Microsoft.Kiota.Abstractions" Version="2.1.1" />
     <PackageVersion Include="Microsoft.Kiota.Http.HttpClientLibrary" Version="2.1.1" />
     <PackageVersion Include="Microsoft.Kiota.Serialization.Form" Version="2.1.1" />
