@@ -37,4 +37,9 @@
     <PackageReference Include="MinVer" PrivateAssets="all" />
     <PackageReference Include="DotNet.ReproducibleBuilds" PrivateAssets="all" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- The .NET 11 SDK adds this implicit using for net11.0 targets. Declaring it here gives net10.0
+         the same set, so both targets compile the same source. -->
+    <Using Include="System.Net.Http.Json" />
+  </ItemGroup>
 </Project>

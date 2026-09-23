@@ -2,10 +2,6 @@ using Microsoft.Extensions.Options;
 using Tiltify.Client.Internal;
 using Tiltify.Client.Options;
 using Tiltify.Client.Serialization;
-#if !NET11_0_OR_GREATER
-using System.Net.Http.Json;
-#endif
-
 
 namespace Tiltify.Client.Authentication;
 
