@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
-using Tiltify.Client.Webhooks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Tiltify.Client.Webhooks;
 
 namespace Tiltify.Client.Tests.Webhooks;
 
@@ -12,7 +12,10 @@ public sealed class TiltifyWebhookSignatureVerifierTests
     private const string Secret = "test-signing-secret";
 
     private static (byte[] body, string timestamp, string signature) MakeValidSignature(
-        string body, string timestamp, string secret)
+        string body,
+        string timestamp,
+        string secret
+    )
     {
         byte[] bodyBytes = Encoding.UTF8.GetBytes(body);
         byte[] signedString = Encoding.UTF8.GetBytes($"{timestamp}.{body}");
@@ -38,7 +41,11 @@ public sealed class TiltifyWebhookSignatureVerifierTests
     {
         const string body = "{\"meta\":{}}";
         const string timestamp = "1711634400";
-        (byte[] bodyBytes, string ts, string sig) = MakeValidSignature(body, timestamp, "correct-secret");
+        (byte[] bodyBytes, string ts, string sig) = MakeValidSignature(
+            body,
+            timestamp,
+            "correct-secret"
+        );
 
         bool result = _verifier.Verify(bodyBytes, ts, sig, "wrong-secret");
 

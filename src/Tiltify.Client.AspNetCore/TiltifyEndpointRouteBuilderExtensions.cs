@@ -25,7 +25,8 @@ public static class TiltifyEndpointRouteBuilderExtensions
     public static IEndpointConventionBuilder MapTiltifyWebhook(
         this IEndpointRouteBuilder endpoints,
         string pattern,
-        Action<TiltifyWebhookEndpointOptions> configure)
+        Action<TiltifyWebhookEndpointOptions> configure
+    )
     {
         ArgumentNullException.ThrowIfNull(endpoints);
         ArgumentException.ThrowIfNullOrEmpty(pattern);
@@ -33,42 +34,50 @@ public static class TiltifyEndpointRouteBuilderExtensions
 
         TiltifyWebhookEndpointOptions options = new()
         {
-            ResolveWebhookOptionsAsync = static (_, _) => Task.FromResult(new TiltifyWebhookOptions
-            {
-                SigningSecret = string.Empty,
-            }),
+            ResolveWebhookOptionsAsync = static (_, _) =>
+                Task.FromResult(new TiltifyWebhookOptions { SigningSecret = string.Empty }),
         };
 
         configure(options);
 
-        return endpoints.MapPost(pattern, async context =>
-        {
-            ITiltifyWebhookHandler handler = context.RequestServices.GetRequiredService<ITiltifyWebhookHandler>();
+        return endpoints.MapPost(
+            pattern,
+            async context =>
+            {
+                ITiltifyWebhookHandler handler =
+                    context.RequestServices.GetRequiredService<ITiltifyWebhookHandler>();
 
-            TiltifyWebhookOptions webhookOptions =
-                await options.ResolveWebhookOptionsAsync(context, context.RequestAborted).ConfigureAwait(false);
-
-            WebhookRequest request =
-                await HttpContextWebhookRequestMapper.FromHttpContextAsync(context, context.RequestAborted)
+                TiltifyWebhookOptions webhookOptions = await options
+                    .ResolveWebhookOptionsAsync(context, context.RequestAborted)
                     .ConfigureAwait(false);
 
-            WebhookHandleResult<TiltifyWebhookEvent> result =
-                await handler.HandleAsync(request, webhookOptions, context.RequestAborted)
+                WebhookRequest request = await HttpContextWebhookRequestMapper
+                    .FromHttpContextAsync(context, context.RequestAborted)
                     .ConfigureAwait(false);
 
-            if (result.Event is TiltifyWebhookEvent evt && options.OnEventAsync is not null)
-            {
-                await options.OnEventAsync(evt, context, context.RequestAborted).ConfigureAwait(false);
-            }
+                WebhookHandleResult<TiltifyWebhookEvent> result = await handler
+                    .HandleAsync(request, webhookOptions, context.RequestAborted)
+                    .ConfigureAwait(false);
 
-            if (options.OnResultAsync is not null)
-            {
-                await options.OnResultAsync(result, context, context.RequestAborted).ConfigureAwait(false);
-            }
+                if (result.Event is TiltifyWebhookEvent evt && options.OnEventAsync is not null)
+                {
+                    await options
+                        .OnEventAsync(evt, context, context.RequestAborted)
+                        .ConfigureAwait(false);
+                }
 
-            await WebhookResponseHttpContextWriter.WriteAsync(context, result.Response, context.RequestAborted)
-                .ConfigureAwait(false);
-        });
+                if (options.OnResultAsync is not null)
+                {
+                    await options
+                        .OnResultAsync(result, context, context.RequestAborted)
+                        .ConfigureAwait(false);
+                }
+
+                await WebhookResponseHttpContextWriter
+                    .WriteAsync(context, result.Response, context.RequestAborted)
+                    .ConfigureAwait(false);
+            }
+        );
     }
 
     /// <summary>
@@ -83,9 +92,19 @@ public static class TiltifyEndpointRouteBuilderExtensions
     public static IEndpointConventionBuilder MapTiltifyWebhook(
         this IEndpointRouteBuilder endpoints,
         string pattern,
-        Func<HttpContext, CancellationToken, Task<TiltifyWebhookOptions>> resolveWebhookOptionsAsync,
+        Func<
+            HttpContext,
+            CancellationToken,
+            Task<TiltifyWebhookOptions>
+        > resolveWebhookOptionsAsync,
         Func<TiltifyWebhookEvent, HttpContext, CancellationToken, Task>? onEventAsync = null,
-        Func<WebhookHandleResult<TiltifyWebhookEvent>, HttpContext, CancellationToken, Task>? onResultAsync = null)
+        Func<
+            WebhookHandleResult<TiltifyWebhookEvent>,
+            HttpContext,
+            CancellationToken,
+            Task
+        >? onResultAsync = null
+    )
     {
         ArgumentNullException.ThrowIfNull(resolveWebhookOptionsAsync);
 
@@ -96,6 +115,7 @@ public static class TiltifyEndpointRouteBuilderExtensions
                 options.ResolveWebhookOptionsAsync = resolveWebhookOptionsAsync;
                 options.OnEventAsync = onEventAsync;
                 options.OnResultAsync = onResultAsync;
-            });
+            }
+        );
     }
 }

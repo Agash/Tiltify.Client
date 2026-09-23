@@ -21,7 +21,8 @@ public static class ServiceCollectionExtensions
     /// <returns>The same <see cref="IServiceCollection"/> instance for chaining.</returns>
     public static IServiceCollection AddTiltifyClient(
         this IServiceCollection services,
-        Action<TiltifyClientOptions> configure)
+        Action<TiltifyClientOptions> configure
+    )
     {
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configure);
@@ -48,15 +49,25 @@ public static class ServiceCollectionExtensions
 
         services.TryAddSingleton(sp =>
         {
-            TiltifyClientOptions opts = sp.GetRequiredService<IOptions<TiltifyClientOptions>>().Value;
-            System.Net.Http.IHttpClientFactory httpFactory = sp.GetRequiredService<System.Net.Http.IHttpClientFactory>();
-            System.Net.Http.HttpClient httpClient = httpFactory.CreateClient(nameof(TiltifyTokenProvider));
-            return new TiltifyTokenProvider(Microsoft.Extensions.Options.Options.Create(opts), httpClient);
+            TiltifyClientOptions opts = sp.GetRequiredService<
+                IOptions<TiltifyClientOptions>
+            >().Value;
+            System.Net.Http.IHttpClientFactory httpFactory =
+                sp.GetRequiredService<System.Net.Http.IHttpClientFactory>();
+            System.Net.Http.HttpClient httpClient = httpFactory.CreateClient(
+                nameof(TiltifyTokenProvider)
+            );
+            return new TiltifyTokenProvider(
+                Microsoft.Extensions.Options.Options.Create(opts),
+                httpClient
+            );
         });
 
         services.TryAddSingleton<ITiltifyClientFactory>(sp =>
         {
-            TiltifyClientOptions opts = sp.GetRequiredService<IOptions<TiltifyClientOptions>>().Value;
+            TiltifyClientOptions opts = sp.GetRequiredService<
+                IOptions<TiltifyClientOptions>
+            >().Value;
             TiltifyTokenProvider tokenProvider = sp.GetRequiredService<TiltifyTokenProvider>();
             return new TiltifyClientFactory(tokenProvider, opts);
         });

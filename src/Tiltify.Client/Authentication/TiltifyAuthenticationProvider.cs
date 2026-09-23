@@ -17,7 +17,10 @@ public sealed class TiltifyAuthenticationProvider : IAuthenticationProvider
     /// </summary>
     /// <param name="tokenProvider">The token provider that supplies valid OAuth access tokens.</param>
     /// <param name="options">The client options supplying the client ID header value.</param>
-    public TiltifyAuthenticationProvider(TiltifyTokenProvider tokenProvider, TiltifyClientOptions options)
+    public TiltifyAuthenticationProvider(
+        TiltifyTokenProvider tokenProvider,
+        TiltifyClientOptions options
+    )
     {
         _tokenProvider = tokenProvider ?? throw new ArgumentNullException(nameof(tokenProvider));
         ArgumentNullException.ThrowIfNull(options);
@@ -28,7 +31,8 @@ public sealed class TiltifyAuthenticationProvider : IAuthenticationProvider
     public async Task AuthenticateRequestAsync(
         RequestInformation request,
         Dictionary<string, object>? additionalAuthenticationContext = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         ArgumentNullException.ThrowIfNull(request);
 

@@ -31,10 +31,7 @@ public sealed class TiltifyClientFactory : ITiltifyClientFactory, IDisposable
         ObjectDisposedException.ThrowIf(_disposed, this);
 
         TiltifyAuthenticationProvider authProvider = new(_tokenProvider, _options);
-        HttpClientRequestAdapter adapter = new(authProvider)
-        {
-            BaseUrl = _options.BaseUrl,
-        };
+        HttpClientRequestAdapter adapter = new(authProvider) { BaseUrl = _options.BaseUrl };
         return new TiltifyApiClient(adapter);
     }
 

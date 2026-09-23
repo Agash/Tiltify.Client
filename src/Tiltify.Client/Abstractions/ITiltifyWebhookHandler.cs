@@ -19,5 +19,6 @@ public interface ITiltifyWebhookHandler
     Task<WebhookHandleResult<TiltifyWebhookEvent>> HandleAsync(
         WebhookRequest request,
         TiltifyWebhookOptions options,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default
+    );
 }
