@@ -37,7 +37,9 @@ public sealed record TiltifyDonation
     /// Deprecated by Tiltify in favour of <see cref="RewardClaims"/>.
     /// This field may still appear in some webhook payloads for backward compatibility.
     /// </remarks>
-    [Obsolete("Use RewardClaims instead. Tiltify deprecated single reward_id in favour of reward_claims in the v5 API.")]
+    [Obsolete(
+        "Use RewardClaims instead. Tiltify deprecated single reward_id in favour of reward_claims in the v5 API."
+    )]
     [JsonPropertyName("reward_id")]
     public string? RewardId { get; init; }
 

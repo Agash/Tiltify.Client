@@ -1,12 +1,12 @@
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
-using Tiltify.Client.Serialization;
 using Agash.Webhook.Abstractions;
 using Tiltify.Client.Abstractions;
 using Tiltify.Client.Events;
 using Tiltify.Client.Internal;
 using Tiltify.Client.Models;
 using Tiltify.Client.Options;
+using Tiltify.Client.Serialization;
 
 namespace Tiltify.Client.Webhooks;
 
@@ -23,14 +23,16 @@ public sealed class TiltifyWebhookHandler : ITiltifyWebhookHandler
     /// </summary>
     public TiltifyWebhookHandler(TiltifyWebhookSignatureVerifier signatureVerifier)
     {
-        _signatureVerifier = signatureVerifier ?? throw new ArgumentNullException(nameof(signatureVerifier));
+        _signatureVerifier =
+            signatureVerifier ?? throw new ArgumentNullException(nameof(signatureVerifier));
     }
 
     /// <inheritdoc />
     public Task<WebhookHandleResult<TiltifyWebhookEvent>> HandleAsync(
         WebhookRequest request,
         TiltifyWebhookOptions options,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         ArgumentNullException.ThrowIfNull(request);
         ArgumentNullException.ThrowIfNull(options);
@@ -45,44 +47,65 @@ public sealed class TiltifyWebhookHandler : ITiltifyWebhookHandler
 
         if (!request.HasContentType("application/json"))
         {
-            return Task.FromResult(Failure(400, false, false, "Expected application/json content type."));
+            return Task.FromResult(
+                Failure(400, false, false, "Expected application/json content type.")
+            );
         }
 
-        string? timestamp = request.GetFirstHeaderValue(TiltifyWebhookSignatureVerifier.TimestampHeaderName);
-        string? signature = request.GetFirstHeaderValue(TiltifyWebhookSignatureVerifier.SignatureHeaderName);
+        string? timestamp = request.GetFirstHeaderValue(
+            TiltifyWebhookSignatureVerifier.TimestampHeaderName
+        );
+        string? signature = request.GetFirstHeaderValue(
+            TiltifyWebhookSignatureVerifier.SignatureHeaderName
+        );
 
         if (!_signatureVerifier.Verify(request.Body, timestamp, signature, options.SigningSecret))
         {
-            return Task.FromResult(Failure(401, false, false,
-                $"Invalid or missing Tiltify webhook signature (headers: {TiltifyWebhookSignatureVerifier.TimestampHeaderName}, {TiltifyWebhookSignatureVerifier.SignatureHeaderName})."));
+            return Task.FromResult(
+                Failure(
+                    401,
+                    false,
+                    false,
+                    $"Invalid or missing Tiltify webhook signature (headers: {TiltifyWebhookSignatureVerifier.TimestampHeaderName}, {TiltifyWebhookSignatureVerifier.SignatureHeaderName})."
+                )
+            );
         }
 
         TiltifyWebhookEnvelope? envelope;
         try
         {
-            envelope = JsonSerializer.Deserialize(request.Body, TiltifyJsonContext.Default.TiltifyWebhookEnvelope);
+            envelope = JsonSerializer.Deserialize(
+                request.Body,
+                TiltifyJsonContext.Default.TiltifyWebhookEnvelope
+            );
         }
         catch (JsonException ex)
         {
-            return Task.FromResult(Failure(400, true, false, $"Failed to parse Tiltify webhook JSON: {ex.Message}"));
+            return Task.FromResult(
+                Failure(400, true, false, $"Failed to parse Tiltify webhook JSON: {ex.Message}")
+            );
         }
 
         if (envelope is null)
         {
-            return Task.FromResult(Failure(400, true, false, "Tiltify webhook payload could not be deserialized."));
+            return Task.FromResult(
+                Failure(400, true, false, "Tiltify webhook payload could not be deserialized.")
+            );
         }
 
         TiltifyWebhookEvent evt = MapEvent(envelope);
         bool isKnown = evt is not TiltifyUnknownWebhookEvent;
 
-        return Task.FromResult(new WebhookHandleResult<TiltifyWebhookEvent>
-        {
-            Response = WebhookResponse.Empty(200),
-            IsAuthenticated = true,
-            IsKnownEvent = isKnown,
-            Event = evt,
-            FailureReason = null,
-        });
+        return Task.FromResult(
+            new WebhookHandleResult<TiltifyWebhookEvent>
+            {
+                Response = WebhookResponse.Empty(200),
+                IsAuthenticated = true,
+                IsKnownEvent = isKnown,
+                Event = evt,
+                FailureReason = null,
+            }
+        );
     }
 
     private static TiltifyWebhookEvent MapEvent(TiltifyWebhookEnvelope envelope)
@@ -93,43 +116,49 @@ public sealed class TiltifyWebhookHandler : ITiltifyWebhookHandler
         {
             case TiltifyWebhookEventNames.DirectDonationUpdated:
             case TiltifyWebhookEventNames.IndirectDonationUpdated:
+            {
+                TiltifyDonation? donation = TryDeserialize(
+                    envelope.Data,
+                    TiltifyJsonContext.Default.TiltifyDonation
+                );
+                if (donation is null)
                 {
-                    TiltifyDonation? donation = TryDeserialize(envelope.Data, TiltifyJsonContext.Default.TiltifyDonation);
-                    if (donation is null)
-                    {
-                        break;
-                    }
-
-                    return new TiltifyDonationWebhookEvent
-                    {
-                        DeliveryId = envelope.Meta.Id,
-                        EventName = eventName,
-                        GeneratedAt = envelope.Meta.GeneratedAt,
-                        Meta = envelope.Meta,
-                        Data = donation,
-                        IsDirect = eventName == TiltifyWebhookEventNames.DirectDonationUpdated,
-                    };
+                    break;
                 }
+
+                return new TiltifyDonationWebhookEvent
+                {
+                    DeliveryId = envelope.Meta.Id,
+                    EventName = eventName,
+                    GeneratedAt = envelope.Meta.GeneratedAt,
+                    Meta = envelope.Meta,
+                    Data = donation,
+                    IsDirect = eventName == TiltifyWebhookEventNames.DirectDonationUpdated,
+                };
+            }
 
             case TiltifyWebhookEventNames.DirectFactUpdated:
             case TiltifyWebhookEventNames.IndirectFactUpdated:
+            {
+                TiltifyFact? fact = TryDeserialize(
+                    envelope.Data,
+                    TiltifyJsonContext.Default.TiltifyFact
+                );
+                if (fact is null)
                 {
-                    TiltifyFact? fact = TryDeserialize(envelope.Data, TiltifyJsonContext.Default.TiltifyFact);
-                    if (fact is null)
-                    {
-                        break;
-                    }
-
-                    return new TiltifyFactWebhookEvent
-                    {
-                        DeliveryId = envelope.Meta.Id,
-                        EventName = eventName,
-                        GeneratedAt = envelope.Meta.GeneratedAt,
-                        Meta = envelope.Meta,
-                        Data = fact,
-                        IsDirect = eventName == TiltifyWebhookEventNames.DirectFactUpdated,
-                    };
+                    break;
                 }
+
+                return new TiltifyFactWebhookEvent
+                {
+                    DeliveryId = envelope.Meta.Id,
+                    EventName = eventName,
+                    GeneratedAt = envelope.Meta.GeneratedAt,
+                    Meta = envelope.Meta,
+                    Data = fact,
+                    IsDirect = eventName == TiltifyWebhookEventNames.DirectFactUpdated,
+                };
+            }
 
             default:
                 break;
@@ -158,7 +187,11 @@ public sealed class TiltifyWebhookHandler : ITiltifyWebhookHandler
     }
 
     private static WebhookHandleResult<TiltifyWebhookEvent> Failure(
-        int statusCode, bool isAuthenticated, bool isKnownEvent, string reason)
+        int statusCode,
+        bool isAuthenticated,
+        bool isKnownEvent,
+        string reason
+    )
     {
         return new()
         {

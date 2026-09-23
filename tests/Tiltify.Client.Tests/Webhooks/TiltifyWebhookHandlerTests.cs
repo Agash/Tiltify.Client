@@ -1,10 +1,10 @@
 using System.Security.Cryptography;
 using System.Text;
 using Agash.Webhook.Abstractions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Tiltify.Client.Events;
 using Tiltify.Client.Options;
 using Tiltify.Client.Webhooks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tiltify.Client.Tests.Webhooks;
 
@@ -34,7 +34,8 @@ public sealed class TiltifyWebhookHandlerTests
         string body,
         string secret,
         string method = "POST",
-        string contentType = "application/json")
+        string contentType = "application/json"
+    )
     {
         (string timestamp, string signature) = Sign(body, secret);
 
@@ -82,8 +83,10 @@ public sealed class TiltifyWebhookHandlerTests
             }
             """;
 
-        WebhookHandleResult<TiltifyWebhookEvent> result =
-            await _handler.HandleAsync(BuildRequest(body, Secret), Options);
+        WebhookHandleResult<TiltifyWebhookEvent> result = await _handler.HandleAsync(
+            BuildRequest(body, Secret),
+            Options
+        );
 
         Assert.IsTrue(result.IsAuthenticated);
         Assert.IsTrue(result.IsKnownEvent);
@@ -121,8 +124,10 @@ public sealed class TiltifyWebhookHandlerTests
             }
             """;
 
-        WebhookHandleResult<TiltifyWebhookEvent> result =
-            await _handler.HandleAsync(BuildRequest(body, Secret), Options);
+        WebhookHandleResult<TiltifyWebhookEvent> result = await _handler.HandleAsync(
+            BuildRequest(body, Secret),
+            Options
+        );
 
         Assert.IsInstanceOfType<TiltifyDonationWebhookEvent>(result.Event);
         var donation = (TiltifyDonationWebhookEvent)result.Event;
@@ -155,8 +160,10 @@ public sealed class TiltifyWebhookHandlerTests
             }
             """;
 
-        WebhookHandleResult<TiltifyWebhookEvent> result =
-            await _handler.HandleAsync(BuildRequest(body, Secret), Options);
+        WebhookHandleResult<TiltifyWebhookEvent> result = await _handler.HandleAsync(
+            BuildRequest(body, Secret),
+            Options
+        );
 
         Assert.IsTrue(result.IsAuthenticated);
         Assert.IsTrue(result.IsKnownEvent);
@@ -186,8 +193,10 @@ public sealed class TiltifyWebhookHandlerTests
             }
             """;
 
-        WebhookHandleResult<TiltifyWebhookEvent> result =
-            await _handler.HandleAsync(BuildRequest(body, Secret), Options);
+        WebhookHandleResult<TiltifyWebhookEvent> result = await _handler.HandleAsync(
+            BuildRequest(body, Secret),
+            Options
+        );
 
         Assert.IsTrue(result.IsAuthenticated);
         Assert.IsFalse(result.IsKnownEvent);
@@ -200,7 +209,8 @@ public sealed class TiltifyWebhookHandlerTests
     [TestMethod]
     public async Task HandleAsync_InvalidSignature_Returns401Unauthenticated()
     {
-        const string body = """{"meta":{"id":"x","event_name":"public:direct:donation_updated","generated_at":"2024-01-01T00:00:00Z","subscription_source_id":"s","subscription_target_id":"t","attempt_number":1},"data":{}}""";
+        const string body =
+            """{"meta":{"id":"x","event_name":"public:direct:donation_updated","generated_at":"2024-01-01T00:00:00Z","subscription_source_id":"s","subscription_target_id":"t","attempt_number":1},"data":{}}""";
         (string timestamp, _) = Sign(body, Secret);
 
         WebhookRequest request = new()
@@ -217,8 +227,10 @@ public sealed class TiltifyWebhookHandlerTests
             },
         };
 
-        WebhookHandleResult<TiltifyWebhookEvent> result =
-            await _handler.HandleAsync(request, Options);
+        WebhookHandleResult<TiltifyWebhookEvent> result = await _handler.HandleAsync(
+            request,
+            Options
+        );
 
         Assert.IsFalse(result.IsAuthenticated);
         Assert.AreEqual(401, result.Response.StatusCode);
@@ -230,8 +242,10 @@ public sealed class TiltifyWebhookHandlerTests
         const string body = "{}";
         WebhookRequest request = BuildRequest(body, Secret, method: "GET");
 
-        WebhookHandleResult<TiltifyWebhookEvent> result =
-            await _handler.HandleAsync(request, Options);
+        WebhookHandleResult<TiltifyWebhookEvent> result = await _handler.HandleAsync(
+            request,
+            Options
+        );
 
         Assert.AreEqual(405, result.Response.StatusCode);
         Assert.IsFalse(result.IsAuthenticated);
@@ -243,8 +257,10 @@ public sealed class TiltifyWebhookHandlerTests
         const string body = "not json";
         WebhookRequest request = BuildRequest(body, Secret, contentType: "text/plain");
 
-        WebhookHandleResult<TiltifyWebhookEvent> result =
-            await _handler.HandleAsync(request, Options);
+        WebhookHandleResult<TiltifyWebhookEvent> result = await _handler.HandleAsync(
+            request,
+            Options
+        );
 
         Assert.AreEqual(400, result.Response.StatusCode);
         Assert.IsFalse(result.IsAuthenticated);
@@ -257,8 +273,10 @@ public sealed class TiltifyWebhookHandlerTests
         const string body = "not-json-at-all";
         WebhookRequest request = BuildRequest(body, Secret);
 
-        WebhookHandleResult<TiltifyWebhookEvent> result =
-            await _handler.HandleAsync(request, Options);
+        WebhookHandleResult<TiltifyWebhookEvent> result = await _handler.HandleAsync(
+            request,
+            Options
+        );
 
         Assert.AreEqual(400, result.Response.StatusCode);
         // Auth fails too because content-type check happens first, but body is "not-json-at-all"

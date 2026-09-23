@@ -1,10 +1,11 @@
-#if !NET11_0_OR_GREATER
-using System.Net.Http.Json;
-#endif
-using Tiltify.Client.Serialization;
 using Microsoft.Extensions.Options;
 using Tiltify.Client.Internal;
 using Tiltify.Client.Options;
+using Tiltify.Client.Serialization;
+#if !NET11_0_OR_GREATER
+using System.Net.Http.Json;
+#endif
+
 
 namespace Tiltify.Client.Authentication;
 
@@ -48,7 +49,10 @@ public sealed class TiltifyTokenProvider : IDisposable
     public async Task<string> GetTokenAsync(CancellationToken cancellationToken = default)
     {
         int bufferSeconds = _options.TokenRefreshBufferSeconds;
-        if (_cachedToken is not null && DateTimeOffset.UtcNow.AddSeconds(bufferSeconds) < _tokenExpiry)
+        if (
+            _cachedToken is not null
+            && DateTimeOffset.UtcNow.AddSeconds(bufferSeconds) < _tokenExpiry
+        )
         {
             return _cachedToken;
         }
@@ -56,12 +60,16 @@ public sealed class TiltifyTokenProvider : IDisposable
         await _lock.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
-            if (_cachedToken is not null && DateTimeOffset.UtcNow.AddSeconds(bufferSeconds) < _tokenExpiry)
+            if (
+                _cachedToken is not null
+                && DateTimeOffset.UtcNow.AddSeconds(bufferSeconds) < _tokenExpiry
+            )
             {
                 return _cachedToken;
             }
 
-            (_cachedToken, _tokenExpiry) = await FetchTokenAsync(cancellationToken).ConfigureAwait(false);
+            (_cachedToken, _tokenExpiry) = await FetchTokenAsync(cancellationToken)
+                .ConfigureAwait(false);
             return _cachedToken;
         }
         finally
@@ -70,27 +78,35 @@ public sealed class TiltifyTokenProvider : IDisposable
         }
     }
 
-    private async Task<(string Token, DateTimeOffset Expiry)> FetchTokenAsync(CancellationToken cancellationToken)
+    private async Task<(string Token, DateTimeOffset Expiry)> FetchTokenAsync(
+        CancellationToken cancellationToken
+    )
     {
         using var request = new HttpRequestMessage(HttpMethod.Post, _options.TokenEndpoint);
-        request.Content = new FormUrlEncodedContent(
-        [
+        request.Content = new FormUrlEncodedContent([
             new KeyValuePair<string, string>("client_id", _options.ClientId),
             new KeyValuePair<string, string>("client_secret", _options.ClientSecret),
             new KeyValuePair<string, string>("grant_type", "client_credentials"),
             new KeyValuePair<string, string>("scope", _options.Scope),
         ]);
 
-        using var response = await _http.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        using var response = await _http
+            .SendAsync(request, cancellationToken)
+            .ConfigureAwait(false);
         _ = response.EnsureSuccessStatusCode();
 
-        TiltifyTokenResponse? tokenResponse = await response.Content
-            .ReadFromJsonAsync(TiltifyJsonContext.Default.TiltifyTokenResponse, cancellationToken)
+        TiltifyTokenResponse? tokenResponse = await response
+            .Content.ReadFromJsonAsync(
+                TiltifyJsonContext.Default.TiltifyTokenResponse,
+                cancellationToken
+            )
             .ConfigureAwait(false);
 
         if (tokenResponse is null || string.IsNullOrEmpty(tokenResponse.AccessToken))
         {
-            throw new InvalidOperationException("Tiltify token endpoint returned an empty or invalid token response.");
+            throw new InvalidOperationException(
+                "Tiltify token endpoint returned an empty or invalid token response."
+            );
         }
 
         DateTimeOffset expiry = DateTimeOffset.UtcNow.AddSeconds(tokenResponse.ExpiresIn);
