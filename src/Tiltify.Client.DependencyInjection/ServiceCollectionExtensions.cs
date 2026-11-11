@@ -72,6 +72,12 @@ public static class ServiceCollectionExtensions
             return new TiltifyClientFactory(tokenProvider, opts);
         });
 
+        services.TryAddSingleton<ITiltifyCampaignApi>(sp => new TiltifyCampaignApi(
+            sp.GetRequiredService<TiltifyTokenProvider>(),
+            sp.GetRequiredService<IOptions<TiltifyClientOptions>>().Value,
+            sp.GetRequiredService<System.Net.Http.IHttpClientFactory>()
+                .CreateClient(nameof(TiltifyCampaignApi))
+        ));
         services.TryAddSingleton<TiltifyWebhookSignatureVerifier>();
         services.TryAddSingleton<ITiltifyWebhookHandler, TiltifyWebhookHandler>();
 
