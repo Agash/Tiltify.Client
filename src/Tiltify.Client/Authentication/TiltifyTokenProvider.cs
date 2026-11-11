@@ -14,6 +14,7 @@ public sealed class TiltifyTokenProvider : IDisposable
     private readonly TiltifyClientOptions _options;
     private readonly HttpClient _http;
     private readonly bool _ownsHttp;
+    private readonly TimeProvider _time;
     private readonly SemaphoreSlim _lock = new(1, 1);
 
     private string? _cachedToken;
@@ -22,8 +23,13 @@ public sealed class TiltifyTokenProvider : IDisposable
     /// <summary>
     /// Initializes a new instance of <see cref="TiltifyTokenProvider"/> using a shared <see cref="HttpClient"/>.
     /// </summary>
-    public TiltifyTokenProvider(IOptions<TiltifyClientOptions> options, HttpClient httpClient)
+    public TiltifyTokenProvider(
+        IOptions<TiltifyClientOptions> options,
+        HttpClient httpClient,
+        TimeProvider timeProvider
+    )
     {
+        _time = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
         _http = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         _ownsHttp = false;
@@ -32,8 +38,9 @@ public sealed class TiltifyTokenProvider : IDisposable
     /// <summary>
     /// Initializes a new instance of <see cref="TiltifyTokenProvider"/> that owns its own <see cref="HttpClient"/>.
     /// </summary>
-    public TiltifyTokenProvider(TiltifyClientOptions options)
+    public TiltifyTokenProvider(TiltifyClientOptions options, TimeProvider timeProvider)
     {
+        _time = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         _options = options ?? throw new ArgumentNullException(nameof(options));
         _http = new HttpClient();
         _ownsHttp = true;
@@ -45,10 +52,7 @@ public sealed class TiltifyTokenProvider : IDisposable
     public async Task<string> GetTokenAsync(CancellationToken cancellationToken = default)
     {
         int bufferSeconds = _options.TokenRefreshBufferSeconds;
-        if (
-            _cachedToken is not null
-            && DateTimeOffset.UtcNow.AddSeconds(bufferSeconds) < _tokenExpiry
-        )
+        if (_cachedToken is not null && _time.GetUtcNow().AddSeconds(bufferSeconds) < _tokenExpiry)
         {
             return _cachedToken;
         }
@@ -58,7 +62,7 @@ public sealed class TiltifyTokenProvider : IDisposable
         {
             if (
                 _cachedToken is not null
-                && DateTimeOffset.UtcNow.AddSeconds(bufferSeconds) < _tokenExpiry
+                && _time.GetUtcNow().AddSeconds(bufferSeconds) < _tokenExpiry
             )
             {
                 return _cachedToken;
@@ -105,7 +109,7 @@ public sealed class TiltifyTokenProvider : IDisposable
             );
         }
 
-        DateTimeOffset expiry = DateTimeOffset.UtcNow.AddSeconds(tokenResponse.ExpiresIn);
+        DateTimeOffset expiry = _time.GetUtcNow().AddSeconds(tokenResponse.ExpiresIn);
         return (tokenResponse.AccessToken, expiry);
     }
 

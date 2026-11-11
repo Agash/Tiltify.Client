@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
+using Microsoft.Kiota.Http.HttpClientLibrary;
 using Tiltify.Client.Abstractions;
 using Tiltify.Client.Authentication;
 using Tiltify.Client.Options;
@@ -43,9 +44,26 @@ public static class ServiceCollectionExtensions
         return services.AddTiltifyClientCore();
     }
 
+    /// <summary>The named <see cref="System.Net.Http.HttpClient"/> the API calls go through, with Kiota's middleware.</summary>
+    public const string ApiHttpClientName = "Tiltify.Api";
+
     private static IServiceCollection AddTiltifyClientCore(this IServiceCollection services)
     {
         _ = services.AddHttpClient();
+        _ = services
+            .AddHttpClient(ApiHttpClientName)
+            .ConfigureAdditionalHttpMessageHandlers(
+                static (handlers, _) =>
+                {
+                    foreach (
+                        System.Net.Http.DelegatingHandler handler in KiotaClientFactory.CreateDefaultHandlers()
+                    )
+                    {
+                        handlers.Add(handler);
+                    }
+                }
+            );
+        services.TryAddSingleton(TimeProvider.System);
 
         services.TryAddSingleton(sp =>
         {
@@ -59,7 +77,8 @@ public static class ServiceCollectionExtensions
             );
             return new TiltifyTokenProvider(
                 Microsoft.Extensions.Options.Options.Create(opts),
-                httpClient
+                httpClient,
+                sp.GetRequiredService<TimeProvider>()
             );
         });
 
@@ -69,11 +88,15 @@ public static class ServiceCollectionExtensions
                 IOptions<TiltifyClientOptions>
             >().Value;
             TiltifyTokenProvider tokenProvider = sp.GetRequiredService<TiltifyTokenProvider>();
-            return new TiltifyClientFactory(tokenProvider, opts);
+            return new TiltifyClientFactory(
+                tokenProvider,
+                opts,
+                sp.GetRequiredService<System.Net.Http.IHttpClientFactory>()
+                    .CreateClient(ApiHttpClientName)
+            );
         });
 
         services.TryAddSingleton<TiltifyWebhookSignatureVerifier>();
-        services.TryAddSingleton(TimeProvider.System);
         services.TryAddSingleton<ITiltifyWebhookHandler>(sp => new TiltifyWebhookHandler(
             sp.GetRequiredService<TiltifyWebhookSignatureVerifier>(),
             sp.GetRequiredService<TimeProvider>()
