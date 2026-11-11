@@ -3,55 +3,37 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Microsoft.Kiota.Http.HttpClientLibrary;
 using Tiltify.Client.Abstractions;
-using Tiltify.Client.Authentication;
 using Tiltify.Client.Options;
 using Tiltify.Client.Webhooks;
 
 namespace Tiltify.Client.DependencyInjection;
 
-/// <summary>
-/// Provides dependency injection registration helpers for Tiltify.Client.
-/// </summary>
+/// <summary>Dependency injection registration for Tiltify.Client.</summary>
 public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Adds Tiltify client services to the specified service collection using the provided options.
+    /// Adds <see cref="ITiltifyClientFactory"/>, the webhook handler, and the
+    /// <see cref="TiltifyClientFactory.HttpClientName"/> HTTP client with Kiota's middleware. Configure that client
+    /// further (proxy, primary handler) with <c>AddHttpClient(TiltifyClientFactory.HttpClientName)</c>.
     /// </summary>
     /// <param name="services">The service collection to modify.</param>
-    /// <param name="configure">A delegate that configures the <see cref="TiltifyClientOptions"/>.</param>
-    /// <returns>The same <see cref="IServiceCollection"/> instance for chaining.</returns>
+    /// <param name="configure">Optional changes to <see cref="TiltifyClientOptions"/>.</param>
+    /// <returns>The same <see cref="IServiceCollection"/> for chaining.</returns>
     public static IServiceCollection AddTiltifyClient(
         this IServiceCollection services,
-        Action<TiltifyClientOptions> configure
+        Action<TiltifyClientOptions>? configure = null
     )
     {
         ArgumentNullException.ThrowIfNull(services);
-        ArgumentNullException.ThrowIfNull(configure);
 
-        _ = services.Configure(configure);
-        return services.AddTiltifyClientCore();
-    }
+        OptionsBuilder<TiltifyClientOptions> options = services.AddOptions<TiltifyClientOptions>();
+        if (configure is not null)
+        {
+            _ = options.Configure(configure);
+        }
 
-    /// <summary>
-    /// Adds Tiltify client services to the specified service collection.
-    /// <see cref="TiltifyClientOptions"/> must already be registered in the container.
-    /// </summary>
-    /// <param name="services">The service collection to modify.</param>
-    /// <returns>The same <see cref="IServiceCollection"/> instance for chaining.</returns>
-    public static IServiceCollection AddTiltifyClient(this IServiceCollection services)
-    {
-        ArgumentNullException.ThrowIfNull(services);
-        return services.AddTiltifyClientCore();
-    }
-
-    /// <summary>The named <see cref="System.Net.Http.HttpClient"/> the API calls go through, with Kiota's middleware.</summary>
-    public const string ApiHttpClientName = "Tiltify.Api";
-
-    private static IServiceCollection AddTiltifyClientCore(this IServiceCollection services)
-    {
-        _ = services.AddHttpClient();
         _ = services
-            .AddHttpClient(ApiHttpClientName)
+            .AddHttpClient(TiltifyClientFactory.HttpClientName)
             .ConfigureAdditionalHttpMessageHandlers(
                 static (handlers, _) =>
                 {
@@ -63,45 +45,11 @@ public static class ServiceCollectionExtensions
                     }
                 }
             );
+
         services.TryAddSingleton(TimeProvider.System);
-
-        services.TryAddSingleton(sp =>
-        {
-            TiltifyClientOptions opts = sp.GetRequiredService<
-                IOptions<TiltifyClientOptions>
-            >().Value;
-            System.Net.Http.IHttpClientFactory httpFactory =
-                sp.GetRequiredService<System.Net.Http.IHttpClientFactory>();
-            System.Net.Http.HttpClient httpClient = httpFactory.CreateClient(
-                nameof(TiltifyTokenProvider)
-            );
-            return new TiltifyTokenProvider(
-                Microsoft.Extensions.Options.Options.Create(opts),
-                httpClient,
-                sp.GetRequiredService<TimeProvider>()
-            );
-        });
-
-        services.TryAddSingleton<ITiltifyClientFactory>(sp =>
-        {
-            TiltifyClientOptions opts = sp.GetRequiredService<
-                IOptions<TiltifyClientOptions>
-            >().Value;
-            TiltifyTokenProvider tokenProvider = sp.GetRequiredService<TiltifyTokenProvider>();
-            return new TiltifyClientFactory(
-                tokenProvider,
-                opts,
-                sp.GetRequiredService<System.Net.Http.IHttpClientFactory>()
-                    .CreateClient(ApiHttpClientName)
-            );
-        });
-
+        services.TryAddSingleton<ITiltifyClientFactory, TiltifyClientFactory>();
         services.TryAddSingleton<TiltifyWebhookSignatureVerifier>();
-        services.TryAddSingleton<ITiltifyWebhookHandler>(sp => new TiltifyWebhookHandler(
-            sp.GetRequiredService<TiltifyWebhookSignatureVerifier>(),
-            sp.GetRequiredService<TimeProvider>()
-        ));
-
+        services.TryAddSingleton<ITiltifyWebhookHandler, TiltifyWebhookHandler>();
         return services;
     }
 }

@@ -1,14 +1,14 @@
+using Tiltify.Client.Authentication;
 using Tiltify.Client.Generated;
 
 namespace Tiltify.Client.Abstractions;
 
-/// <summary>
-/// Creates authenticated <see cref="TiltifyApiClient"/> instances.
-/// </summary>
+/// <summary>Creates authenticated <see cref="TiltifyApiClient"/> instances.</summary>
 public interface ITiltifyClientFactory
 {
     /// <summary>
-    /// Creates a new <see cref="TiltifyApiClient"/> using the configured OAuth credentials.
+    /// Creates a client that authenticates as <paramref name="credentials"/>. Clients are cheap; tokens are cached per
+    /// client ID across them.
     /// </summary>
-    TiltifyApiClient CreateApiClient();
+    TiltifyApiClient CreateApiClient(TiltifyCredentials credentials);
 }

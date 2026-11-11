@@ -1,33 +1,14 @@
 using Microsoft.Kiota.Abstractions;
 using Microsoft.Kiota.Abstractions.Authentication;
-using Tiltify.Client.Options;
 
 namespace Tiltify.Client.Authentication;
 
-/// <summary>
-/// Provides Kiota authentication for the Tiltify API using OAuth bearer tokens and the Client-Id header.
-/// </summary>
-public sealed class TiltifyAuthenticationProvider : IAuthenticationProvider
+/// <summary>Signs each API request with the credentials' bearer token and Client-Id header.</summary>
+internal sealed class TiltifyAuthenticationProvider(
+    TiltifyTokenCache tokens,
+    TiltifyCredentials credentials
+) : IAuthenticationProvider
 {
-    private readonly TiltifyTokenProvider _tokenProvider;
-    private readonly string _clientId;
-
-    /// <summary>
-    /// Initializes a new instance of <see cref="TiltifyAuthenticationProvider"/>.
-    /// </summary>
-    /// <param name="tokenProvider">The token provider that supplies valid OAuth access tokens.</param>
-    /// <param name="options">The client options supplying the client ID header value.</param>
-    public TiltifyAuthenticationProvider(
-        TiltifyTokenProvider tokenProvider,
-        TiltifyClientOptions options
-    )
-    {
-        _tokenProvider = tokenProvider ?? throw new ArgumentNullException(nameof(tokenProvider));
-        ArgumentNullException.ThrowIfNull(options);
-        _clientId = options.ClientId;
-    }
-
-    /// <inheritdoc />
     public async Task AuthenticateRequestAsync(
         RequestInformation request,
         Dictionary<string, object>? additionalAuthenticationContext = null,
@@ -36,8 +17,10 @@ public sealed class TiltifyAuthenticationProvider : IAuthenticationProvider
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        string token = await _tokenProvider.GetTokenAsync(cancellationToken).ConfigureAwait(false);
+        string token = await tokens
+            .GetTokenAsync(credentials, cancellationToken)
+            .ConfigureAwait(false);
         _ = request.Headers.TryAdd("Authorization", $"Bearer {token}");
-        _ = request.Headers.TryAdd("Client-Id", _clientId);
+        _ = request.Headers.TryAdd("Client-Id", credentials.ClientId);
     }
 }

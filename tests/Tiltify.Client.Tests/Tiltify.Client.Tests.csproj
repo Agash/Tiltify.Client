@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Tiltify.Client\Tiltify.Client.csproj" />
+    <ProjectReference Include="..\..\src\Tiltify.Client.DependencyInjection\Tiltify.Client.DependencyInjection.csproj" />
   </ItemGroup>
 
   <ItemGroup>

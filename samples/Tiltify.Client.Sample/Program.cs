@@ -55,11 +55,7 @@ internal static class SampleApplication
 
         WebApplicationBuilder builder = WebApplication.CreateBuilder();
         builder.WebHost.UseUrls($"http://127.0.0.1:{configuration.LocalPort}");
-        builder.Services.AddTiltifyClient(opts =>
-        {
-            opts.ClientId = configuration.ClientId;
-            opts.ClientSecret = configuration.ClientSecret;
-        });
+        builder.Services.AddTiltifyClient();
 
         WebApplication app = builder.Build();
 
@@ -176,16 +172,6 @@ internal static class SampleApplication
             webhookPath = "/" + webhookPath;
         }
 
-        string clientId = AnsiConsole.Prompt(
-            new TextPrompt<string>("Tiltify [green]Client ID[/]?").PromptStyle("deepskyblue1")
-        );
-
-        string clientSecret = AnsiConsole.Prompt(
-            new TextPrompt<string>("Tiltify [green]Client Secret[/]?")
-                .PromptStyle("deepskyblue1")
-                .Secret()
-        );
-
         string signingSecret = AnsiConsole.Prompt(
             new TextPrompt<string>("Webhook [green]signing secret[/]?")
                 .PromptStyle("deepskyblue1")
@@ -223,8 +209,6 @@ internal static class SampleApplication
         return new SampleConfiguration(
             LocalPort: localPort,
             WebhookPath: webhookPath,
-            ClientId: clientId,
-            ClientSecret: clientSecret,
             SigningSecret: signingSecret,
             UseDevTunnels: useDevTunnels,
             TunnelId: tunnelId,
@@ -316,7 +300,6 @@ internal static class SampleApplication
         table.AddRow("Local base URL", $"[white]{Markup.Escape(localBaseUrl)}[/]");
         table.AddRow("Webhook path", $"[white]{Markup.Escape(configuration.WebhookPath)}[/]");
         table.AddRow("Local webhook URL", $"[white]{Markup.Escape(localWebhookUrl)}[/]");
-        table.AddRow("Client ID", $"[white]{Markup.Escape(configuration.ClientId)}[/]");
         table.AddRow("Signing secret", "[grey](hidden)[/]");
         table.AddRow(
             "Dev Tunnels enabled",
@@ -540,8 +523,6 @@ internal static class SampleApplication
     private sealed record SampleConfiguration(
         int LocalPort,
         string WebhookPath,
-        string ClientId,
-        string ClientSecret,
         string SigningSecret,
         bool UseDevTunnels,
         string TunnelId,

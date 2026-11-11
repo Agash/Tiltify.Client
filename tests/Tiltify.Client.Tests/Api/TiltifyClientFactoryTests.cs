@@ -1,70 +1,118 @@
 using System.Net;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
+using Tiltify.Client.Abstractions;
 using Tiltify.Client.Authentication;
-using Tiltify.Client.Options;
+using Tiltify.Client.DependencyInjection;
 
 namespace Tiltify.Client.Tests.Api;
 
+/// <summary>The client factory as an app composes it: AddTiltifyClient with the HTTP client's primary handler swapped.</summary>
 [TestClass]
 public sealed class TiltifyClientFactoryTests
 {
+    private static readonly TiltifyCredentials Alpha = new("alpha", "alpha-secret");
+    private static readonly TiltifyCredentials Beta = new("beta", "beta-secret");
+
     public TestContext TestContext { get; set; } = null!;
 
     [TestMethod]
-    public async Task CreateApiClient_SendsThroughTheCallersHttpClientWithAToken()
+    public async Task CreateApiClient_AuthenticatesAsTheGivenCredentials()
     {
-        using Stub stub = new();
-        using HttpClient http = new(stub, disposeHandler: false);
-        using TiltifyClientFactory factory = new(
-            new TiltifyTokenProvider(
-                Microsoft.Extensions.Options.Options.Create(Options()),
-                http,
-                new ManualTime()
-            ),
-            Options(),
-            http
-        );
+        using Composition app = new();
 
-        _ = await factory
-            .CreateApiClient()
+        _ = await app
+            .Factory.CreateApiClient(Alpha)
+            .Api.Public.Campaigns["camp-1"]
+            .Polls.GetAsync(cancellationToken: TestContext.CancellationToken);
+        _ = await app
+            .Factory.CreateApiClient(Beta)
             .Api.Public.Campaigns["camp-1"]
             .Polls.GetAsync(cancellationToken: TestContext.CancellationToken);
 
-        Assert.AreEqual("Bearer token-1", stub.LastAuthorization);
-        Assert.AreEqual("/api/public/campaigns/camp-1/polls", stub.LastApiPath);
+        CollectionAssert.AreEqual(
+            new[] { "Bearer alpha-1 alpha", "Bearer beta-1 beta" },
+            app.Tiltify.ApiCalls
+        );
     }
 
     [TestMethod]
-    public async Task GetTokenAsync_RefreshesOnlyNearExpiryOnTheInjectedClock()
+    public async Task CreateApiClient_ReusesATokenUntilItNearsExpiry()
     {
-        using Stub stub = new();
-        using HttpClient http = new(stub, disposeHandler: false);
-        ManualTime time = new();
-        using TiltifyTokenProvider tokens = new(
-            Microsoft.Extensions.Options.Options.Create(Options()),
-            http,
-            time
+        using Composition app = new();
+
+        await app.ReadPollsAsync(Alpha, TestContext.CancellationToken);
+        app.Time.Advance(TimeSpan.FromSeconds(7200 - 61));
+        await app.ReadPollsAsync(Alpha, TestContext.CancellationToken);
+        app.Time.Advance(TimeSpan.FromSeconds(2));
+        await app.ReadPollsAsync(Alpha, TestContext.CancellationToken);
+
+        CollectionAssert.AreEqual(
+            new[] { "Bearer alpha-1 alpha", "Bearer alpha-1 alpha", "Bearer alpha-2 alpha" },
+            app.Tiltify.ApiCalls
         );
-
-        string first = await tokens.GetTokenAsync(TestContext.CancellationToken);
-        time.Advance(TimeSpan.FromSeconds(7200 - 61));
-        string cached = await tokens.GetTokenAsync(TestContext.CancellationToken);
-        time.Advance(TimeSpan.FromSeconds(2));
-        string refreshed = await tokens.GetTokenAsync(TestContext.CancellationToken);
-
-        Assert.AreEqual("token-1", first);
-        Assert.AreEqual("token-1", cached);
-        Assert.AreEqual("token-2", refreshed);
     }
 
-    private static TiltifyClientOptions Options() =>
-        new()
+    [TestMethod]
+    public async Task CreateApiClient_ChangedSecretFetchesANewToken()
+    {
+        using Composition app = new();
+
+        await app.ReadPollsAsync(Alpha, TestContext.CancellationToken);
+        await app.ReadPollsAsync(
+            Alpha with
+            {
+                ClientSecret = "rotated",
+            },
+            TestContext.CancellationToken
+        );
+
+        CollectionAssert.AreEqual(
+            new[] { "Bearer alpha-1 alpha", "Bearer alpha-2 alpha" },
+            app.Tiltify.ApiCalls
+        );
+    }
+
+    [TestMethod]
+    public void Credentials_ToStringOmitsTheSecret()
+    {
+        Assert.DoesNotContain("alpha-secret", Alpha.ToString(), StringComparison.Ordinal);
+    }
+
+    private sealed class Composition : IDisposable
+    {
+        private readonly ServiceProvider _services;
+
+        public Composition()
         {
-            ClientId = "client",
-            ClientSecret = "secret",
-            BaseUrl = "https://tiltify.test",
-            TokenEndpoint = "https://tiltify.test/oauth/token",
-        };
+            ServiceCollection services = new();
+            _ = services.AddSingleton<TimeProvider>(Time);
+            _ = services.AddTiltifyClient(static options =>
+            {
+                options.BaseUrl = "https://tiltify.test";
+                options.TokenEndpoint = "https://tiltify.test/oauth/token";
+            });
+            _ = services
+                .AddHttpClient(TiltifyClientFactory.HttpClientName)
+                .ConfigurePrimaryHttpMessageHandler(() => Tiltify);
+            _services = services.BuildServiceProvider();
+            Factory = _services.GetRequiredService<ITiltifyClientFactory>();
+        }
+
+        public ManualTime Time { get; } = new();
+
+        public StubTiltify Tiltify { get; } = new();
+
+        public ITiltifyClientFactory Factory { get; }
+
+        public async Task ReadPollsAsync(TiltifyCredentials credentials, CancellationToken ct) =>
+            _ = await Factory
+                .CreateApiClient(credentials)
+                .Api.Public.Campaigns["camp-1"]
+                .Polls.GetAsync(cancellationToken: ct);
+
+        public void Dispose() => _services.Dispose();
+    }
 
     private sealed class ManualTime : TimeProvider
     {
@@ -75,32 +123,35 @@ public sealed class TiltifyClientFactoryTests
         public void Advance(TimeSpan by) => _now += by;
     }
 
-    private sealed class Stub : HttpMessageHandler
+    /// <summary>Issues numbered tokens per client ID and records each API call's token and Client-Id.</summary>
+    private sealed class StubTiltify : HttpMessageHandler
     {
-        private int _tokens;
+        private readonly Dictionary<string, int> _issued = new(StringComparer.Ordinal);
 
-        public string? LastAuthorization { get; private set; }
+        public List<string> ApiCalls { get; } = [];
 
-        public string? LastApiPath { get; private set; }
-
-        protected override Task<HttpResponseMessage> SendAsync(
+        protected override async Task<HttpResponseMessage> SendAsync(
             HttpRequestMessage request,
             CancellationToken cancellationToken
         )
         {
             if (request.RequestUri!.AbsolutePath == "/oauth/token")
             {
-                _tokens++;
-                return Task.FromResult(
-                    Json(
-                        $$"""{ "access_token": "token-{{_tokens}}", "token_type": "bearer", "expires_in": 7200 }"""
-                    )
+                string form = await request.Content!.ReadAsStringAsync(cancellationToken);
+                string clientId = form.Split('&')
+                    .Single(static pair => pair.StartsWith("client_id=", StringComparison.Ordinal))[
+                    "client_id=".Length..
+                ];
+                int number = _issued[clientId] = _issued.GetValueOrDefault(clientId) + 1;
+                return Json(
+                    $$"""{ "access_token": "{{clientId}}-{{number}}", "token_type": "bearer", "expires_in": 7200 }"""
                 );
             }
 
-            LastAuthorization = request.Headers.Authorization?.ToString();
-            LastApiPath = request.RequestUri.AbsolutePath;
-            return Task.FromResult(Json("""{ "data": [], "metadata": { "limit": 10 } }"""));
+            ApiCalls.Add(
+                $"{request.Headers.Authorization} {request.Headers.GetValues("Client-Id").Single()}"
+            );
+            return Json("""{ "data": [], "metadata": { "limit": 10 } }""");
         }
 
         private static HttpResponseMessage Json(string body) =>
