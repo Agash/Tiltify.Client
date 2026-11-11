@@ -13,17 +13,24 @@ public sealed class TiltifyWebhookHandlerTests
 {
     private const string Secret = "test-signing-secret";
 
+    // The documented example's send time; deliveries are signed with it and checked against this clock.
+    private static readonly DateTimeOffset _sentAt = new(2023, 4, 18, 16, 49, 0, TimeSpan.Zero);
+
     private readonly TiltifyWebhookSignatureVerifier _verifier = new();
+    private readonly FixedTime _time = new(_sentAt.AddSeconds(5));
     private readonly TiltifyWebhookHandler _handler;
 
     public TiltifyWebhookHandlerTests()
     {
-        _handler = new TiltifyWebhookHandler(_verifier);
+        _handler = new TiltifyWebhookHandler(_verifier, _time);
     }
 
     private static (string timestamp, string signature) Sign(string body, string secret)
     {
-        string timestamp = "1711634400";
+        string timestamp = _sentAt.ToString(
+            "yyyy-MM-ddTHH:mm:ss.ffffffZ",
+            System.Globalization.CultureInfo.InvariantCulture
+        );
         byte[] signedString = Encoding.UTF8.GetBytes($"{timestamp}.{body}");
         using HMACSHA256 hmac = new(Encoding.UTF8.GetBytes(secret));
         string sig = Convert.ToBase64String(hmac.ComputeHash(signedString));
@@ -63,11 +70,11 @@ public sealed class TiltifyWebhookHandlerTests
             {
               "meta": {
                 "id": "delivery-abc",
-                "event_name": "public:direct:donation_updated",
+                "event_type": "public:direct:donation_updated",
                 "generated_at": "2024-03-28T10:00:00Z",
                 "subscription_source_id": "sub-1",
-                "subscription_target_id": "tgt-1",
-                "attempt_number": 1
+                "subscription_source_type": "Campaign",
+                "attempted_at": "2023-04-18T16:49:00.617031Z"
               },
               "data": {
                 "id": "don-1",
@@ -109,11 +116,11 @@ public sealed class TiltifyWebhookHandlerTests
             {
               "meta": {
                 "id": "delivery-xyz",
-                "event_name": "public:indirect:donation_updated",
+                "event_type": "public:indirect:donation_updated",
                 "generated_at": "2024-03-28T10:00:00Z",
                 "subscription_source_id": "sub-2",
-                "subscription_target_id": "tgt-2",
-                "attempt_number": 1
+                "subscription_source_type": "Campaign",
+                "attempted_at": "2023-04-18T16:49:00.617031Z"
               },
               "data": {
                 "id": "don-2",
@@ -142,11 +149,11 @@ public sealed class TiltifyWebhookHandlerTests
             {
               "meta": {
                 "id": "delivery-fact-1",
-                "event_name": "public:direct:fact_updated",
+                "event_type": "public:direct:fact_updated",
                 "generated_at": "2024-03-28T10:00:00Z",
                 "subscription_source_id": "sub-3",
-                "subscription_target_id": "tgt-3",
-                "attempt_number": 1
+                "subscription_source_type": "Campaign",
+                "attempted_at": "2023-04-18T16:49:00.617031Z"
               },
               "data": {
                 "id": "fact-1",
@@ -183,11 +190,11 @@ public sealed class TiltifyWebhookHandlerTests
             {
               "meta": {
                 "id": "delivery-unk",
-                "event_name": "public:direct:reward_claimed",
+                "event_type": "public:direct:reward_claimed",
                 "generated_at": "2024-03-28T10:00:00Z",
                 "subscription_source_id": "sub-4",
-                "subscription_target_id": "tgt-4",
-                "attempt_number": 1
+                "subscription_source_type": "Campaign",
+                "attempted_at": "2023-04-18T16:49:00.617031Z"
               },
               "data": { "reward_id": "rew-1" }
             }
@@ -210,7 +217,7 @@ public sealed class TiltifyWebhookHandlerTests
     public async Task HandleAsync_InvalidSignature_Returns401Unauthenticated()
     {
         const string body =
-            """{"meta":{"id":"x","event_name":"public:direct:donation_updated","generated_at":"2024-01-01T00:00:00Z","subscription_source_id":"s","subscription_target_id":"t","attempt_number":1},"data":{}}""";
+            """{"meta":{"id":"x","event_type":"public:direct:donation_updated","generated_at":"2024-01-01T00:00:00Z","subscription_source_id":"s","subscription_source_type":"t","attempt_number":1},"data":{}}""";
         (string timestamp, _) = Sign(body, Secret);
 
         WebhookRequest request = new()
@@ -283,5 +290,49 @@ public sealed class TiltifyWebhookHandlerTests
         // which doesn't have application/json content type from BuildRequest.
         // Actually BuildRequest defaults to application/json, so content-type passes, but JSON parsing fails.
         Assert.IsTrue(result.IsAuthenticated);
+    }
+
+    [TestMethod]
+    public async Task HandleAsync_PrivateDonation_IsPrivateWithTheDonorEmail()
+    {
+        string body = """
+            {
+              "meta": { "id": "d-9", "event_type": "private:direct:donation_updated", "generated_at": "2023-04-18T16:49:00Z", "attempted_at": "2023-04-18T16:49:00Z", "subscription_source_id": "fact-1", "subscription_source_type": "Campaign" },
+              "data": { "id": "don-9", "donor_name": "Pat", "donor_email": "pat@example.com", "amount": { "value": "5.00", "currency": "USD" } }
+            }
+            """;
+
+        WebhookHandleResult<TiltifyWebhookEvent> result = await _handler.HandleAsync(
+            BuildRequest(body, Secret),
+            Options
+        );
+
+        TiltifyDonationWebhookEvent donation = Assert.IsInstanceOfType<TiltifyDonationWebhookEvent>(
+            result.Event
+        );
+        Assert.IsTrue(donation.IsPrivate);
+        Assert.IsTrue(donation.IsDirect);
+        Assert.AreEqual("pat@example.com", donation.Data.DonorEmail);
+    }
+
+    [TestMethod]
+    public async Task HandleAsync_StaleTimestamp_Returns401()
+    {
+        TiltifyWebhookHandler handler = new(_verifier, new FixedTime(_sentAt.AddMinutes(10)));
+        string body =
+            """{ "meta": { "id": "d-1", "event_type": "public:direct:donation_updated", "generated_at": "2023-04-18T16:49:00Z" }, "data": { "id": "don-1" } }""";
+
+        WebhookHandleResult<TiltifyWebhookEvent> result = await handler.HandleAsync(
+            BuildRequest(body, Secret),
+            Options
+        );
+
+        Assert.AreEqual(401, result.Response.StatusCode);
+        Assert.IsFalse(result.IsAuthenticated);
+    }
+
+    private sealed class FixedTime(DateTimeOffset now) : TimeProvider
+    {
+        public override DateTimeOffset GetUtcNow() => now;
     }
 }

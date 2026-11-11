@@ -17,14 +17,19 @@ namespace Tiltify.Client.Webhooks;
 public sealed class TiltifyWebhookHandler : ITiltifyWebhookHandler
 {
     private readonly TiltifyWebhookSignatureVerifier _signatureVerifier;
+    private readonly TimeProvider _time;
 
     /// <summary>
     /// Initializes a new instance of <see cref="TiltifyWebhookHandler"/>.
     /// </summary>
-    public TiltifyWebhookHandler(TiltifyWebhookSignatureVerifier signatureVerifier)
+    public TiltifyWebhookHandler(
+        TiltifyWebhookSignatureVerifier signatureVerifier,
+        TimeProvider timeProvider
+    )
     {
         _signatureVerifier =
             signatureVerifier ?? throw new ArgumentNullException(nameof(signatureVerifier));
+        _time = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
     }
 
     /// <inheritdoc />
@@ -71,6 +76,23 @@ public sealed class TiltifyWebhookHandler : ITiltifyWebhookHandler
             );
         }
 
+        // Tiltify asks receivers to check the timestamp is recent, so a captured delivery cannot be replayed later.
+        if (
+            options.MaxTimestampAge is { } maxAge
+            && DateTimeOffset.TryParse(
+                timestamp,
+                System.Globalization.CultureInfo.InvariantCulture,
+                System.Globalization.DateTimeStyles.AssumeUniversal,
+                out DateTimeOffset sentAt
+            )
+            && (_time.GetUtcNow() - sentAt).Duration() > maxAge
+        )
+        {
+            return Task.FromResult(
+                Failure(401, false, false, "Tiltify webhook timestamp is too old or in the future.")
+            );
+        }
+
         TiltifyWebhookEnvelope? envelope;
         try
         {
@@ -110,12 +132,13 @@ public sealed class TiltifyWebhookHandler : ITiltifyWebhookHandler
 
     private static TiltifyWebhookEvent MapEvent(TiltifyWebhookEnvelope envelope)
     {
-        string eventName = envelope.Meta.EventName;
-
-        switch (eventName)
+        string eventName = envelope.Meta.EventType;
+        string[] parts = eventName.Split(':');
+        bool isPrivate = parts.Length == 3 && parts[0] == "private";
+        bool isDirect = parts.Length == 3 && parts[1] == "direct";
+        switch (parts.Length == 3 ? parts[2] : string.Empty)
         {
-            case TiltifyWebhookEventNames.DirectDonationUpdated:
-            case TiltifyWebhookEventNames.IndirectDonationUpdated:
+            case "donation_updated":
             {
                 TiltifyDonation? donation = TryDeserialize(
                     envelope.Data,
@@ -133,12 +156,12 @@ public sealed class TiltifyWebhookHandler : ITiltifyWebhookHandler
                     GeneratedAt = envelope.Meta.GeneratedAt,
                     Meta = envelope.Meta,
                     Data = donation,
-                    IsDirect = eventName == TiltifyWebhookEventNames.DirectDonationUpdated,
+                    IsDirect = isDirect,
+                    IsPrivate = isPrivate,
                 };
             }
 
-            case TiltifyWebhookEventNames.DirectFactUpdated:
-            case TiltifyWebhookEventNames.IndirectFactUpdated:
+            case "fact_updated":
             {
                 TiltifyFact? fact = TryDeserialize(
                     envelope.Data,
@@ -156,7 +179,8 @@ public sealed class TiltifyWebhookHandler : ITiltifyWebhookHandler
                     GeneratedAt = envelope.Meta.GeneratedAt,
                     Meta = envelope.Meta,
                     Data = fact,
-                    IsDirect = eventName == TiltifyWebhookEventNames.DirectFactUpdated,
+                    IsDirect = isDirect,
+                    IsPrivate = isPrivate,
                 };
             }
 

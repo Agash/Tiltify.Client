@@ -18,4 +18,7 @@ public abstract record TiltifyWebhookEvent
 
     /// <summary>Gets the full metadata envelope.</summary>
     public required TiltifyWebhookMeta Meta { get; init; }
+
+    /// <summary>Whether the event carries private data (a <c>private:</c> event type).</summary>
+    public bool IsPrivate { get; init; }
 }

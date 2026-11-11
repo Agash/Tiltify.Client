@@ -15,6 +15,10 @@ public sealed record TiltifyDonation
     [JsonPropertyName("donor_name")]
     public string? DonorName { get; init; }
 
+    /// <summary>Gets the donor's email; only in <c>private:</c> events.</summary>
+    [JsonPropertyName("donor_email")]
+    public string? DonorEmail { get; init; }
+
     /// <summary>Gets the public donor comment.</summary>
     [JsonPropertyName("donor_comment")]
     public string? DonorComment { get; init; }

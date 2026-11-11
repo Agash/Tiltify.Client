@@ -27,7 +27,7 @@ public sealed class TiltifyWebhookSignatureVerifierTests
     [TestMethod]
     public void Verify_ValidSignature_ReturnsTrue()
     {
-        const string body = "{\"meta\":{\"event_name\":\"public:direct:donation_updated\"}}";
+        const string body = "{\"meta\":{\"event_type\":\"public:direct:donation_updated\"}}";
         const string timestamp = "1711634400";
         (byte[] bodyBytes, string ts, string sig) = MakeValidSignature(body, timestamp, Secret);
 
