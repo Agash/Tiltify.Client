@@ -147,8 +147,10 @@ namespace Tiltify.Client.Generated.Api.Public.Auction_houses.Item.Auction_items
             [QueryParameter("created_before")]
             public string CreatedBefore { get; set; }
 #endif
+            #pragma warning disable CS1591
             [QueryParameter("limit")]
             public int? Limit { get; set; }
+            #pragma warning restore CS1591
             /// <summary>Status of the auction item. One of: active, or completed</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable

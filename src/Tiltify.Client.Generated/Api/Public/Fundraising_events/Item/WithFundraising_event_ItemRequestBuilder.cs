@@ -29,11 +29,13 @@ namespace Tiltify.Client.Generated.Api.Public.Fundraising_events.Item
     public partial class WithFundraising_event_ItemRequestBuilder : BaseRequestBuilder
     {
         /// <summary>The configured_leaderboard property</summary>
+        [Obsolete("")]
         public global::Tiltify.Client.Generated.Api.Public.Fundraising_events.Item.Configured_leaderboard.Configured_leaderboardRequestBuilder Configured_leaderboard
         {
             get => new global::Tiltify.Client.Generated.Api.Public.Fundraising_events.Item.Configured_leaderboard.Configured_leaderboardRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The donations property</summary>
+        [Obsolete("")]
         public global::Tiltify.Client.Generated.Api.Public.Fundraising_events.Item.Donations.DonationsRequestBuilder Donations
         {
             get => new global::Tiltify.Client.Generated.Api.Public.Fundraising_events.Item.Donations.DonationsRequestBuilder(PathParameters, RequestAdapter);

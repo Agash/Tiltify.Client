@@ -134,8 +134,10 @@ namespace Tiltify.Client.Generated.Api.Public.Facts.Item.Contributions
             [QueryParameter("completed_before")]
             public string CompletedBefore { get; set; }
 #endif
+            #pragma warning disable CS1591
             [QueryParameter("limit")]
             public int? Limit { get; set; }
+            #pragma warning restore CS1591
         }
     }
 }

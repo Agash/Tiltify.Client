@@ -36,6 +36,7 @@ namespace Tiltify.Client.Generated.Api.Public.Facts.Item
     public partial class WithFact_ItemRequestBuilder : BaseRequestBuilder
     {
         /// <summary>The configured_leaderboard property</summary>
+        [Obsolete("")]
         public global::Tiltify.Client.Generated.Api.Public.Facts.Item.Configured_leaderboard.Configured_leaderboardRequestBuilder Configured_leaderboard
         {
             get => new global::Tiltify.Client.Generated.Api.Public.Facts.Item.Configured_leaderboard.Configured_leaderboardRequestBuilder(PathParameters, RequestAdapter);

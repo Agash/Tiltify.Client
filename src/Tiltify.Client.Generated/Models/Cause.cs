@@ -22,6 +22,8 @@ namespace Tiltify.Client.Generated.Models
 #else
         public global::Tiltify.Client.Generated.Models.Image Avatar { get; set; }
 #endif
+        /// <summary>Unique Identifier for the Object. UUID</summary>
+        public Guid? CauseFactPublicId { get; set; }
         /// <summary>The contact property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -121,6 +123,7 @@ namespace Tiltify.Client.Generated.Models
             return new Dictionary<string, Action<IParseNode>>
             {
                 { "avatar", n => { Avatar = n.GetObjectValue<global::Tiltify.Client.Generated.Models.Image>(global::Tiltify.Client.Generated.Models.Image.CreateFromDiscriminatorValue); } },
+                { "cause_fact_public_id", n => { CauseFactPublicId = n.GetGuidValue(); } },
                 { "contact", n => { Contact = n.GetObjectValue<global::Tiltify.Client.Generated.Models.Cause_contact>(global::Tiltify.Client.Generated.Models.Cause_contact.CreateFromDiscriminatorValue); } },
                 { "currency_code", n => { CurrencyCode = n.GetStringValue(); } },
                 { "description", n => { Description = n.GetStringValue(); } },
@@ -143,6 +146,7 @@ namespace Tiltify.Client.Generated.Models
         {
             if(ReferenceEquals(writer, null)) throw new ArgumentNullException(nameof(writer));
             writer.WriteObjectValue<global::Tiltify.Client.Generated.Models.Image>("avatar", Avatar);
+            writer.WriteGuidValue("cause_fact_public_id", CauseFactPublicId);
             writer.WriteObjectValue<global::Tiltify.Client.Generated.Models.Cause_contact>("contact", Contact);
             writer.WriteStringValue("currency_code", CurrencyCode);
             writer.WriteStringValue("description", Description);

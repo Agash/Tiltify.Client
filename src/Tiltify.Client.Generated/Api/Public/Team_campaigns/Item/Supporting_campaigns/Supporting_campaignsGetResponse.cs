@@ -10,15 +10,40 @@ namespace Tiltify.Client.Generated.Api.Public.Team_campaigns.Item.Supporting_cam
 {
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     #pragma warning disable CS1591
-    public partial class Supporting_campaignsGetResponse : global::Tiltify.Client.Generated.Models.PaginatedResponse, IParsable
+    public partial class Supporting_campaignsGetResponse : IAdditionalDataHolder, IParsable
     #pragma warning restore CS1591
     {
+        /// <summary>Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.</summary>
+        public IDictionary<string, object> AdditionalData { get; set; }
+        /// <summary>The data property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public List<global::Tiltify.Client.Generated.Models.Campaign>? Data { get; set; }
+#nullable restore
+#else
+        public List<global::Tiltify.Client.Generated.Models.Campaign> Data { get; set; }
+#endif
+        /// <summary>The metadata property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public global::Tiltify.Client.Generated.Models.PaginationMetadata? Metadata { get; set; }
+#nullable restore
+#else
+        public global::Tiltify.Client.Generated.Models.PaginationMetadata Metadata { get; set; }
+#endif
+        /// <summary>
+        /// Instantiates a new <see cref="global::Tiltify.Client.Generated.Api.Public.Team_campaigns.Item.Supporting_campaigns.Supporting_campaignsGetResponse"/> and sets the default values.
+        /// </summary>
+        public Supporting_campaignsGetResponse()
+        {
+            AdditionalData = new Dictionary<string, object>();
+        }
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
         /// <returns>A <see cref="global::Tiltify.Client.Generated.Api.Public.Team_campaigns.Item.Supporting_campaigns.Supporting_campaignsGetResponse"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static new global::Tiltify.Client.Generated.Api.Public.Team_campaigns.Item.Supporting_campaigns.Supporting_campaignsGetResponse CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static global::Tiltify.Client.Generated.Api.Public.Team_campaigns.Item.Supporting_campaigns.Supporting_campaignsGetResponse CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             if(ReferenceEquals(parseNode, null)) throw new ArgumentNullException(nameof(parseNode));
             return new global::Tiltify.Client.Generated.Api.Public.Team_campaigns.Item.Supporting_campaigns.Supporting_campaignsGetResponse();
@@ -27,20 +52,24 @@ namespace Tiltify.Client.Generated.Api.Public.Team_campaigns.Item.Supporting_cam
         /// The deserialization information for the current model
         /// </summary>
         /// <returns>A IDictionary&lt;string, Action&lt;IParseNode&gt;&gt;</returns>
-        public override IDictionary<string, Action<IParseNode>> GetFieldDeserializers()
+        public virtual IDictionary<string, Action<IParseNode>> GetFieldDeserializers()
         {
-            return new Dictionary<string, Action<IParseNode>>(base.GetFieldDeserializers())
+            return new Dictionary<string, Action<IParseNode>>
             {
+                { "data", n => { Data = n.GetCollectionOfObjectValues<global::Tiltify.Client.Generated.Models.Campaign>(global::Tiltify.Client.Generated.Models.Campaign.CreateFromDiscriminatorValue)?.AsList(); } },
+                { "metadata", n => { Metadata = n.GetObjectValue<global::Tiltify.Client.Generated.Models.PaginationMetadata>(global::Tiltify.Client.Generated.Models.PaginationMetadata.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
         /// Serializes information the current object
         /// </summary>
         /// <param name="writer">Serialization writer to use to serialize this model</param>
-        public override void Serialize(ISerializationWriter writer)
+        public virtual void Serialize(ISerializationWriter writer)
         {
             if(ReferenceEquals(writer, null)) throw new ArgumentNullException(nameof(writer));
-            base.Serialize(writer);
+            writer.WriteCollectionOfObjectValues<global::Tiltify.Client.Generated.Models.Campaign>("data", Data);
+            writer.WriteObjectValue<global::Tiltify.Client.Generated.Models.PaginationMetadata>("metadata", Metadata);
+            writer.WriteAdditionalData(AdditionalData);
         }
     }
 }

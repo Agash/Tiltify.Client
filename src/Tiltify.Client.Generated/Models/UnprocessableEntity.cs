@@ -9,7 +9,7 @@ using System;
 namespace Tiltify.Client.Generated.Models
 {
     /// <summary>
-    /// Object returned in API errors
+    /// Object returned when requester has provided invalid parameters.
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     public partial class UnprocessableEntity : ApiException, IAdditionalDataHolder, IParsable
@@ -19,10 +19,10 @@ namespace Tiltify.Client.Generated.Models
         /// <summary>The error property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public global::Tiltify.Client.Generated.Models.UnprocessableEntity_error? Error { get; set; }
+        public global::Tiltify.Client.Generated.Models.ErrorResponse_error? Error { get; set; }
 #nullable restore
 #else
-        public global::Tiltify.Client.Generated.Models.UnprocessableEntity_error Error { get; set; }
+        public global::Tiltify.Client.Generated.Models.ErrorResponse_error Error { get; set; }
 #endif
         /// <summary>The primary error message.</summary>
         public override string Message { get => base.Message; }
@@ -51,7 +51,7 @@ namespace Tiltify.Client.Generated.Models
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                { "error", n => { Error = n.GetObjectValue<global::Tiltify.Client.Generated.Models.UnprocessableEntity_error>(global::Tiltify.Client.Generated.Models.UnprocessableEntity_error.CreateFromDiscriminatorValue); } },
+                { "error", n => { Error = n.GetObjectValue<global::Tiltify.Client.Generated.Models.ErrorResponse_error>(global::Tiltify.Client.Generated.Models.ErrorResponse_error.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -61,7 +61,7 @@ namespace Tiltify.Client.Generated.Models
         public virtual void Serialize(ISerializationWriter writer)
         {
             if(ReferenceEquals(writer, null)) throw new ArgumentNullException(nameof(writer));
-            writer.WriteObjectValue<global::Tiltify.Client.Generated.Models.UnprocessableEntity_error>("error", Error);
+            writer.WriteObjectValue<global::Tiltify.Client.Generated.Models.ErrorResponse_error>("error", Error);
             writer.WriteAdditionalData(AdditionalData);
         }
     }

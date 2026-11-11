@@ -1,8 +1,8 @@
 {
-  "descriptionHash": "2A7FEBF942DD6DF77BC0C8EF34B4EE748D4CA2B021D0954E266DE9D4DD2480CECE8AF99207A52A6DDE744940F46655CF4EF9E9186918F918F7EA72E3C2D63FBC",
-  "descriptionLocation": "../../../tiltify-openapi.json",
+  "descriptionHash": "AE59DC474C4B853CFFB41C40BDAAB8CD2D15E6D8307147B781230A1D6C04CA1B470E675B759E55FDE63575BCF81A7A3231B07E6FF2BC951565299339120AE5D0",
+  "descriptionLocation": "../../tiltify-openapi.patched.json",
   "lockFileVersion": "1.0.0",
-  "kiotaVersion": "1.30.0",
+  "kiotaVersion": "1.38.0",
   "clientClassName": "TiltifyApiClient",
   "typeAccessModifier": "Public",
   "clientNamespaceName": "Tiltify.Client.Generated",
@@ -30,5 +30,6 @@
   ],
   "includePatterns": [],
   "excludePatterns": [],
-  "disabledValidationRules": []
+  "disabledValidationRules": [],
+  "allowedExternalOrigins": []
 }

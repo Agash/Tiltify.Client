@@ -114,8 +114,10 @@ namespace Tiltify.Client.Generated.Api.Public.Fundraising_events.Item.Supporting
             [QueryParameter("before")]
             public string Before { get; set; }
 #endif
+            #pragma warning disable CS1591
             [QueryParameter("limit")]
             public int? Limit { get; set; }
+            #pragma warning restore CS1591
         }
     }
 }

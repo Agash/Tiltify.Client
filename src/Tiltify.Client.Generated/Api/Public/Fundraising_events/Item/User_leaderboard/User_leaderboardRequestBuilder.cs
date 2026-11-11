@@ -114,8 +114,10 @@ namespace Tiltify.Client.Generated.Api.Public.Fundraising_events.Item.User_leade
             [QueryParameter("before")]
             public string Before { get; set; }
 #endif
+            #pragma warning disable CS1591
             [QueryParameter("limit")]
             public int? Limit { get; set; }
+            #pragma warning restore CS1591
             /// <summary>The time range to use in leaderboard generation</summary>
             [QueryParameter("time_type")]
             public global::Tiltify.Client.Generated.Api.Public.Fundraising_events.Item.User_leaderboard.GetTime_typeQueryParameterType? TimeType { get; set; }

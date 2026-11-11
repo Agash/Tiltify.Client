@@ -114,8 +114,10 @@ namespace Tiltify.Client.Generated.Api.Public.Users.Item.Teams
             [QueryParameter("before")]
             public string Before { get; set; }
 #endif
+            #pragma warning disable CS1591
             [QueryParameter("limit")]
             public int? Limit { get; set; }
+            #pragma warning restore CS1591
             /// <summary>Returns only teams where a user has a specific role</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable

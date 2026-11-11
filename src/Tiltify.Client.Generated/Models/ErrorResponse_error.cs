@@ -5,49 +5,49 @@ using Microsoft.Kiota.Abstractions.Serialization;
 using System.Collections.Generic;
 using System.IO;
 using System;
-namespace Tiltify.Client.Generated.Api.Public.Team_campaigns.Item.Supporting_campaigns
+namespace Tiltify.Client.Generated.Models
 {
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     #pragma warning disable CS1591
-    public partial class Supporting_campaignsGetResponse_metadata : IAdditionalDataHolder, IParsable
+    public partial class ErrorResponse_error : IAdditionalDataHolder, IParsable
     #pragma warning restore CS1591
     {
         /// <summary>Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.</summary>
         public IDictionary<string, object> AdditionalData { get; set; }
-        /// <summary>The cursor to the next page if it exists</summary>
+        /// <summary>The fields property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? After { get; set; }
+        public global::Tiltify.Client.Generated.Models.ErrorResponse_error_fields? Fields { get; set; }
 #nullable restore
 #else
-        public string After { get; set; }
+        public global::Tiltify.Client.Generated.Models.ErrorResponse_error_fields Fields { get; set; }
 #endif
-        /// <summary>The cursor to the previous page if it exists</summary>
+        /// <summary>A human readable message describing the error.</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Before { get; set; }
+        public string? Message { get; set; }
 #nullable restore
 #else
-        public string Before { get; set; }
+        public string Message { get; set; }
 #endif
-        /// <summary>The requested record limit</summary>
-        public double? Limit { get; set; }
+        /// <summary>The HTTP status of the error</summary>
+        public int? Status { get; set; }
         /// <summary>
-        /// Instantiates a new <see cref="global::Tiltify.Client.Generated.Api.Public.Team_campaigns.Item.Supporting_campaigns.Supporting_campaignsGetResponse_metadata"/> and sets the default values.
+        /// Instantiates a new <see cref="global::Tiltify.Client.Generated.Models.ErrorResponse_error"/> and sets the default values.
         /// </summary>
-        public Supporting_campaignsGetResponse_metadata()
+        public ErrorResponse_error()
         {
             AdditionalData = new Dictionary<string, object>();
         }
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="global::Tiltify.Client.Generated.Api.Public.Team_campaigns.Item.Supporting_campaigns.Supporting_campaignsGetResponse_metadata"/></returns>
+        /// <returns>A <see cref="global::Tiltify.Client.Generated.Models.ErrorResponse_error"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static global::Tiltify.Client.Generated.Api.Public.Team_campaigns.Item.Supporting_campaigns.Supporting_campaignsGetResponse_metadata CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static global::Tiltify.Client.Generated.Models.ErrorResponse_error CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             if(ReferenceEquals(parseNode, null)) throw new ArgumentNullException(nameof(parseNode));
-            return new global::Tiltify.Client.Generated.Api.Public.Team_campaigns.Item.Supporting_campaigns.Supporting_campaignsGetResponse_metadata();
+            return new global::Tiltify.Client.Generated.Models.ErrorResponse_error();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -57,9 +57,9 @@ namespace Tiltify.Client.Generated.Api.Public.Team_campaigns.Item.Supporting_cam
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                { "after", n => { After = n.GetStringValue(); } },
-                { "before", n => { Before = n.GetStringValue(); } },
-                { "limit", n => { Limit = n.GetDoubleValue(); } },
+                { "fields", n => { Fields = n.GetObjectValue<global::Tiltify.Client.Generated.Models.ErrorResponse_error_fields>(global::Tiltify.Client.Generated.Models.ErrorResponse_error_fields.CreateFromDiscriminatorValue); } },
+                { "message", n => { Message = n.GetStringValue(); } },
+                { "status", n => { Status = n.GetIntValue(); } },
             };
         }
         /// <summary>
@@ -69,9 +69,9 @@ namespace Tiltify.Client.Generated.Api.Public.Team_campaigns.Item.Supporting_cam
         public virtual void Serialize(ISerializationWriter writer)
         {
             if(ReferenceEquals(writer, null)) throw new ArgumentNullException(nameof(writer));
-            writer.WriteStringValue("after", After);
-            writer.WriteStringValue("before", Before);
-            writer.WriteDoubleValue("limit", Limit);
+            writer.WriteObjectValue<global::Tiltify.Client.Generated.Models.ErrorResponse_error_fields>("fields", Fields);
+            writer.WriteStringValue("message", Message);
+            writer.WriteIntValue("status", Status);
             writer.WriteAdditionalData(AdditionalData);
         }
     }

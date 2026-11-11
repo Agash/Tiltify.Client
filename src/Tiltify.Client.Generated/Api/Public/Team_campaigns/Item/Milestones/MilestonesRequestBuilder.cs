@@ -137,8 +137,10 @@ namespace Tiltify.Client.Generated.Api.Public.Team_campaigns.Item.Milestones
             /// <summary>Returns disabled milestones. Defaults to false</summary>
             [QueryParameter("include_disabled")]
             public bool? IncludeDisabled { get; set; }
+            #pragma warning disable CS1591
             [QueryParameter("limit")]
             public int? Limit { get; set; }
+            #pragma warning restore CS1591
             /// <summary>Returns only milestones that have been updated after the given moment in ISO8601 format</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable

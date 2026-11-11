@@ -5,6 +5,7 @@ using Microsoft.Kiota.Abstractions.Serialization;
 using System.Collections.Generic;
 using System.IO;
 using System;
+using Tiltify.Client.Generated.Models;
 namespace Tiltify.Client.Generated.Api.Public.CurrentUser
 {
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
@@ -17,10 +18,10 @@ namespace Tiltify.Client.Generated.Api.Public.CurrentUser
         /// <summary>The data property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public global::Tiltify.Client.Generated.Api.Public.CurrentUser.CurrentUserGetResponse_data? Data { get; set; }
+        public global::Tiltify.Client.Generated.Models.User? Data { get; set; }
 #nullable restore
 #else
-        public global::Tiltify.Client.Generated.Api.Public.CurrentUser.CurrentUserGetResponse_data Data { get; set; }
+        public global::Tiltify.Client.Generated.Models.User Data { get; set; }
 #endif
         /// <summary>
         /// Instantiates a new <see cref="global::Tiltify.Client.Generated.Api.Public.CurrentUser.CurrentUserGetResponse"/> and sets the default values.
@@ -47,7 +48,7 @@ namespace Tiltify.Client.Generated.Api.Public.CurrentUser
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                { "data", n => { Data = n.GetObjectValue<global::Tiltify.Client.Generated.Api.Public.CurrentUser.CurrentUserGetResponse_data>(global::Tiltify.Client.Generated.Api.Public.CurrentUser.CurrentUserGetResponse_data.CreateFromDiscriminatorValue); } },
+                { "data", n => { Data = n.GetObjectValue<global::Tiltify.Client.Generated.Models.User>(global::Tiltify.Client.Generated.Models.User.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -57,7 +58,7 @@ namespace Tiltify.Client.Generated.Api.Public.CurrentUser
         public virtual void Serialize(ISerializationWriter writer)
         {
             if(ReferenceEquals(writer, null)) throw new ArgumentNullException(nameof(writer));
-            writer.WriteObjectValue<global::Tiltify.Client.Generated.Api.Public.CurrentUser.CurrentUserGetResponse_data>("data", Data);
+            writer.WriteObjectValue<global::Tiltify.Client.Generated.Models.User>("data", Data);
             writer.WriteAdditionalData(AdditionalData);
         }
     }

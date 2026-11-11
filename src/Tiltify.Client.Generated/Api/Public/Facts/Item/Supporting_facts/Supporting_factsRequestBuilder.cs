@@ -114,8 +114,10 @@ namespace Tiltify.Client.Generated.Api.Public.Facts.Item.Supporting_facts
             [QueryParameter("before")]
             public string Before { get; set; }
 #endif
+            #pragma warning disable CS1591
             [QueryParameter("limit")]
             public int? Limit { get; set; }
+            #pragma warning restore CS1591
             /// <summary>Use this parameter to filter facts by the given status.</summary>
             [QueryParameter("status")]
             public global::Tiltify.Client.Generated.Api.Public.Facts.Item.Supporting_facts.GetStatusQueryParameterType? Status { get; set; }

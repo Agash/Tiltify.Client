@@ -117,8 +117,10 @@ namespace Tiltify.Client.Generated.Api.Public.Facts.Item.Configured_leaderboard
             [QueryParameter("before")]
             public string Before { get; set; }
 #endif
+            #pragma warning disable CS1591
             [QueryParameter("limit")]
             public int? Limit { get; set; }
+            #pragma warning restore CS1591
             /// <summary>The time range to use in leaderboard generation</summary>
             [QueryParameter("time_type")]
             public global::Tiltify.Client.Generated.Api.Public.Facts.Item.Configured_leaderboard.GetTime_typeQueryParameterType? TimeType { get; set; }

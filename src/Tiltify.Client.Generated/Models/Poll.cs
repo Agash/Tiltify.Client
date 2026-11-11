@@ -16,13 +16,23 @@ namespace Tiltify.Client.Generated.Models
         public bool? Active { get; set; }
         /// <summary>Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.</summary>
         public IDictionary<string, object> AdditionalData { get; set; }
-        /// <summary>Amount Raised by this poll option</summary>
+        /// <summary>Amount Raised by this poll</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
         public global::Tiltify.Client.Generated.Models.Money? AmountRaised { get; set; }
 #nullable restore
 #else
         public global::Tiltify.Client.Generated.Models.Money AmountRaised { get; set; }
+#endif
+        /// <summary>Moment when the poll ends</summary>
+        public DateTimeOffset? EndsAt { get; set; }
+        /// <summary>Goal for this poll</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public global::Tiltify.Client.Generated.Models.Money? Goal { get; set; }
+#nullable restore
+#else
+        public global::Tiltify.Client.Generated.Models.Money Goal { get; set; }
 #endif
         /// <summary>Unique Identifier for the poll.</summary>
         public Guid? Id { get; set; }
@@ -76,6 +86,8 @@ namespace Tiltify.Client.Generated.Models
             {
                 { "active", n => { Active = n.GetBoolValue(); } },
                 { "amount_raised", n => { AmountRaised = n.GetObjectValue<global::Tiltify.Client.Generated.Models.Money>(global::Tiltify.Client.Generated.Models.Money.CreateFromDiscriminatorValue); } },
+                { "ends_at", n => { EndsAt = n.GetDateTimeOffsetValue(); } },
+                { "goal", n => { Goal = n.GetObjectValue<global::Tiltify.Client.Generated.Models.Money>(global::Tiltify.Client.Generated.Models.Money.CreateFromDiscriminatorValue); } },
                 { "id", n => { Id = n.GetGuidValue(); } },
                 { "inserted_at", n => { InsertedAt = n.GetDateTimeOffsetValue(); } },
                 { "legacy_id", n => { LegacyId = n.GetDoubleValue(); } },
@@ -93,6 +105,8 @@ namespace Tiltify.Client.Generated.Models
             if(ReferenceEquals(writer, null)) throw new ArgumentNullException(nameof(writer));
             writer.WriteBoolValue("active", Active);
             writer.WriteObjectValue<global::Tiltify.Client.Generated.Models.Money>("amount_raised", AmountRaised);
+            writer.WriteDateTimeOffsetValue("ends_at", EndsAt);
+            writer.WriteObjectValue<global::Tiltify.Client.Generated.Models.Money>("goal", Goal);
             writer.WriteGuidValue("id", Id);
             writer.WriteDateTimeOffsetValue("inserted_at", InsertedAt);
             writer.WriteDoubleValue("legacy_id", LegacyId);

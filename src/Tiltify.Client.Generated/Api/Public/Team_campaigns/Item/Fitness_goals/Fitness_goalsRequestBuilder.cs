@@ -114,8 +114,10 @@ namespace Tiltify.Client.Generated.Api.Public.Team_campaigns.Item.Fitness_goals
             [QueryParameter("before")]
             public string Before { get; set; }
 #endif
+            #pragma warning disable CS1591
             [QueryParameter("limit")]
             public int? Limit { get; set; }
+            #pragma warning restore CS1591
         }
     }
 }
