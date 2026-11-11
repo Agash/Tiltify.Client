@@ -3,6 +3,7 @@ using System.Text;
 using Agash.Webhook.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Tiltify.Client.Events;
+using Tiltify.Client.Models;
 using Tiltify.Client.Options;
 using Tiltify.Client.Webhooks;
 
@@ -162,6 +163,9 @@ public sealed class TiltifyWebhookHandlerTests
                 "value": "1500.00",
                 "campaign_id": "camp-1",
                 "active": true,
+                "status": "retired",
+                "published_at": "2024-03-01T12:00:00Z",
+                "retired_at": "2024-03-28T08:59:00Z",
                 "updated_at": "2024-03-28T09:00:00Z"
               }
             }
@@ -181,6 +185,15 @@ public sealed class TiltifyWebhookHandlerTests
         Assert.AreEqual("fact-1", factEvent.Data.Id);
         Assert.AreEqual("Speedrun", factEvent.Data.Name);
         Assert.IsTrue(factEvent.Data.Active);
+        Assert.AreEqual(TiltifyFactStatus.Retired, factEvent.Data.Status);
+        Assert.AreEqual(
+            new DateTimeOffset(2024, 3, 1, 12, 0, 0, TimeSpan.Zero),
+            factEvent.Data.PublishedAt
+        );
+        Assert.AreEqual(
+            new DateTimeOffset(2024, 3, 28, 8, 59, 0, TimeSpan.Zero),
+            factEvent.Data.RetiredAt
+        );
     }
 
     [TestMethod]

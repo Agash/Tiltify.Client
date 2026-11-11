@@ -26,8 +26,8 @@ public sealed record TiltifyFact
     public string? Description { get; init; }
 
     /// <summary>
-    /// Gets the campaign status.
-    /// Typical values: <c>active</c>, <c>inactive</c>, <c>published</c>, <c>unpublished</c>.
+    /// Gets the status: <c>unpublished</c>, <c>published</c> (live and taking donations) or <c>retired</c>
+    /// (ended). See <see cref="TiltifyFactStatus"/>.
     /// </summary>
     [JsonPropertyName("status")]
     public string? Status { get; init; }
@@ -74,6 +74,14 @@ public sealed record TiltifyFact
     /// <summary>Gets whether this campaign is currently accepting donations.</summary>
     [JsonPropertyName("active")]
     public bool? Active { get; init; }
+
+    /// <summary>Gets when the fact was published, when it has been.</summary>
+    [JsonPropertyName("published_at")]
+    public DateTimeOffset? PublishedAt { get; init; }
+
+    /// <summary>Gets when the fact was retired, when it has been.</summary>
+    [JsonPropertyName("retired_at")]
+    public DateTimeOffset? RetiredAt { get; init; }
 
     /// <summary>Gets the ISO 8601 timestamp when the campaign is scheduled to start.</summary>
     [JsonPropertyName("starts_at")]
